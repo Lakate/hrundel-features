@@ -1,0 +1,13 @@
+{
+  "name": "hrundel-features",
+  "version": "0.0.1",
+  "main": "app.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha test"
+  },
+  "author": "Lakate",
+  "license": "MIT",
+  "description": ""
+}
