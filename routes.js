@@ -4,7 +4,7 @@ const pages = require('./controllers/pages');
 const students = require('./controllers/students');
 const tasks = require('./controllers/tasks');
 
-module.exports = (app) => {
+module.exports = app => {
     app.get('/', pages.index);
 
     app.get('/students/:id', students.list);
