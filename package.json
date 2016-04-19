@@ -25,7 +25,6 @@
     "lint:css": "stylelint **/*.css",
     "lint": "npm run lint:css & npm run lint:js",
     "precommit": "npm run lint:js",
-    "prepush": "npm run lint:js",
     "deploy:dynamic": "git push heroku master",
     "deploy:static": "surge -p ./public -d hrundel-board.surge.sh",
     "deploy": "npm-run-all deploy:*"
