@@ -9,11 +9,35 @@
     "mongoose": "4.4.12",
     "morgan": "1.7.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "2.8.0",
+    "eslint-config-xo": "0.13.0",
+    "husky": "0.11.4",
+    "mocha": "2.4.5",
+    "surge": "0.17.7"
+  },
   "scripts": {
-    "test": "mocha test"
+    "test": "mocha --recursive tests/",
+    "clean": "rimraf node_modules/",
+    "start": "node app.js",
+    "start:dev": "node app.js --NODE_ENV=development",
+    "lint:js": "eslint --fix .",
+    "lint:css": "stylelint **/*.css",
+    "lint": "npm run lint:css & npm run lint:js",
+    "precommit": "npm run lint:js",
+    "prepush": "npm run lint:js",
+    "deploy:dynamic": "git push heroku master",
+    "deploy:static": "surge -p ./public -d hrundel-board.surge.sh",
+    "deploy": "npm-run-all deploy:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lakate/hrundel-features.git"
   },
   "author": "Lakate",
   "license": "MIT",
-  "description": ""
+  "description": "urfu-2015 dashboard",
+  "engines": {
+    "node": "4.4.0"
+  }
 }
