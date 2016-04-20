@@ -1,5 +1,5 @@
 exports.index = (req, res) => {
-    res.send('Hello, User!');
+    res.render('main/main', req.commonData);
 };
 
 exports.error404 = (req, res) => {
