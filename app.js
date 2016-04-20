@@ -7,7 +7,7 @@ const path = require('path');
 const hbs = require('hbs');
 const argv = require('minimist')(process.argv.slice(2));
 
-const viewsDir = path.join(__dirname, 'bundles');
+const viewsDir = path.join(__dirname, 'server/bundles');
 const publicDir = path.join(__dirname, 'public');
 
 app.set('views', viewsDir);
@@ -16,7 +16,7 @@ app.set('view engine', 'hbs');
 app.use(morgan('dev'));
 app.use(express.static(publicDir));
 
-hbs.registerPartials(path.join(__dirname, 'blocks'));
+hbs.registerPartials(path.join(__dirname, 'server/blocks'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
     next();
 });
 
-require('./routes')(app);
+require('./server/routes')(app);
 
 app.set('port', (process.env.PORT || 5000));
 

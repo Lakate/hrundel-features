@@ -7,6 +7,6 @@ webpackDevConfig.plugins.push(new webpack.optimize.UglifyJsPlugin());
 
 webpackDevConfig.postcss = () => {
     return [autoprefixer, cssnano];
-}
+};
 
 module.exports = webpackDevConfig;
