@@ -1,13 +1,14 @@
 'use strict';
 
 const pages = require('./controllers/pages');
-const students = require('./controllers/students');
 const tasks = require('./controllers/tasks');
+
+const studentsRoute = require('./studentsRoute');
 
 module.exports = app => {
     app.get('/', pages.index);
 
-    app.get('/students/:id', students.list);
+    app.use('/students', studentsRoute);
 
     app.get('/task/:id', tasks.list);
 
