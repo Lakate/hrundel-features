@@ -1,13 +1,6 @@
-export const addStudent = student => {
-    return {
-        type: 'ADD_STUDENT',
-        student
-    };
-};
-
 export const updateStudent = student => {
     return {
-        type: 'UPDATE_STUDENT',
+        type: 'REFRESH_STUDENT',
         student
     };
 };
@@ -19,7 +12,8 @@ export const selectStudent = selectedStudentId => {
     };
 };
 
-export function fetchAddNote(student) {
+/*
+export function fetchOnAddNote(student) {
     return dispatch => {
         return fetch('/todos/add', {
             method: 'POST',
@@ -33,7 +27,7 @@ export function fetchAddNote(student) {
     };
 }
 
-export function fetchUpdateStudent(newStudent, id) {
+export function fetchRefreshStudent(newStudent, id) {
     return dispatch => {
         return fetch('/todos/edit', {
             method: 'PUT',
@@ -46,3 +40,4 @@ export function fetchUpdateStudent(newStudent, id) {
             .then(json => dispatch(updateStudent(json)));
     };
 }
+*/

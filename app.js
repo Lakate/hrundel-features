@@ -1,19 +1,53 @@
+var webpack = require('webpack');
+var webpackDevMiddleware = require('webpack-dev-middleware');
+var webpackHotMiddleware = require('webpack-hot-middleware');
+var config = require('./webpack.config');
+
 const express = require('express');
 const app = express();
 
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const path = require('path');
+const hbs = require('hbs');
+const argv = require('minimist')(process.argv.slice(2));
 
+const viewsDir = path.join(__dirname, 'server/bundles');
+const publicDir = path.join(__dirname, 'public');
+
+app.set('views', viewsDir);
 app.set('view engine', 'hbs');
 
+var compiler = webpack(config);
+app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: config.output.publicPath}));
+app.use(webpackHotMiddleware(compiler));
+
 app.use(morgan('dev'));
+app.use(express.static(publicDir));
+
+hbs.registerPartials(path.join(__dirname, 'server/blocks'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
 
-require('./routes')(app);
+app.use((req, res, next) => {
+    req.commonData = {
+        meta: {
+            description: 'Hrundel-board',
+            charset: 'utf-8'
+        },
+        page: {
+            title: 'Hrundel-board'
+        },
+        host: (argv.NODE_ENV === 'development') ? '' : '//hrundel-board.surge.sh'
+    };
+
+    next();
+});
+
+require('./server/routes')(app);
 
 app.set('port', (process.env.PORT || 5000));
 

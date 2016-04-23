@@ -1,8 +1,8 @@
 'use strict';
 
-const pages = require('./server/controllers/pages');
-const students = require('./server/controllers/students');
-const tasks = require('./server/controllers/tasks');
+const pages = require('./controllers/pages');
+const students = require('./controllers/students');
+const tasks = require('./controllers/tasks');
 
 module.exports = app => {
     app.get('/', pages.index);

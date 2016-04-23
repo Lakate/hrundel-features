@@ -1,0 +1,33 @@
+.students-table
+{
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    min-width: 250px;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.students-table table
+{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+@media (min-width: 992px)
+{
+    .students-table
+    {
+        width: 75%;
+        float: left;
+    }
+}
+
+@media (min-width: 780px)
+{
+    .students-table
+    {
+        width: 65%;
+        float: left;
+    }
+}
