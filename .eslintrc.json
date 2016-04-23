@@ -5,6 +5,9 @@
       "jsx": true
     }
   },
+  "plugins": [
+    "react"
+  ],
   "env": {
     "browser": true,
     "mocha": true,
@@ -16,6 +19,8 @@
     "max-len": [2, 100],
     "max-params": [2, 3],
     "no-lonely-if": 0,
-    "new-cap": 0
+    "new-cap": 0,
+    "no-unused-vars": 0,
+    "no-useless-constructor": 0
   }
 }

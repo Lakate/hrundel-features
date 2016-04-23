@@ -1,0 +1,43 @@
+.student-card
+{
+    margin-bottom: 10px;
+    min-width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.student-card__img
+{
+    background: url("./girl.png");
+    width: 250px;
+    height: 250px;
+}
+
+.student-card__data
+{
+    width: 90%;
+    text-align: center;
+}
+
+@media (min-width: 992px)
+{
+    .student-card
+    {
+        width: 25%;
+        float: left;
+        margin-right: 10px;
+    }
+}
+
+@media (min-width: 780px)
+{
+    .student-card
+    {
+        width: 30%;
+        float: left;
+        margin-right: 10px;
+    }
+}
