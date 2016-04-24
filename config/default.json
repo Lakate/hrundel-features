@@ -1,0 +1,5 @@
+{
+    "db": {
+        "mongodb_URL": "mongodb://hrundel:hrundelurfu2015@ds045454.mlab.com:45454/board"
+    }
+}

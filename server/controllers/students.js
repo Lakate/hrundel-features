@@ -1,60 +1,54 @@
 'use strict';
 
 const Students = require('../models/student');
-const Tasks = require('../models/tasks');
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://<login>:<password>@ds013951.mlab.com:13951/hrundelboard');
-mongoose.connection.on('error', console.error.bind(console, 'connection error'));
-
 exports.create = (req, res) => {
-    const data = {
+    const student = {
         login: req.body.login,
+        mentor: req.body.mentor
+    };
+    const task = {
+        number: req.body.number,
+        taskType: req.body.type,
         mentor: req.body.mentor,
-        stars: 0
+        status: req.body.status
     };
 
-    const newStudent = new Students(data);
-    newStudent.save(err => {
-        if (err) {
-            console.error('Error on user save: ' + err);
-        } else {
-            res.json(data);
-        }
-    });
-};
+    const newStudent = new Students(student);
+    newStudent.addTask(task);
 
-exports.update = (req, res) => {
-    res.send('Обновлять ментора, так как храним текущего?');
+    newStudent.save()
+            .then(savedStudent => {
+                res.json(savedStudent);
+            })
+            .catch(err => {
+                console.error('Error on user save: ' + err);
+            });
 };
 
 exports.getStudent = (req, res) => {
     const query = {_id: req.params.id};
-    Students.findStudent(query, student => res.json(student));
+    Students.findStudent(query)
+        .then(student => res.json(student));
 };
 
-exports.getStudentTasks = (req, res) => {
-    const query = {_id: req.params.id};
-    Students.findStudent(query, students => {
-        const student = students.pop();
-        student.getStudentTasks(tasks => res.json(tasks));
-    });
-};
-
-exports.setStudentTasks = (req, res) => {
-    const data = {
-        name: req.body.name,
-        userId: req.params.id,
+exports.updateTask = (req, res) => {
+    const task = {
+        number: req.body.number,
+        taskType: req.body.type,
+        mentor: req.body.mentor,
         status: req.body.status
     };
+    const query = {
+        'tasks.taskType': req.body.type,
+        'tasks.number': req.body.number,
+        'login': req.body.login
+    };
 
-    console.log(req.params.id);
-    const newTask = new Tasks(data);
-    newTask.save(err => {
-        if (err) {
-            console.error('Error on task save: ' + err);
-        } else {
-            res.json(data);
-        }
-    });
+    Students.findStudent(query)
+        .then(foundStudent => {
+            return foundStudent.updateTask(task);
+        })
+        .then(savedStudent => res.json(savedStudent));
 };
