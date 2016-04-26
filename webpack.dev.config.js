@@ -6,7 +6,6 @@ const path = require('path');
 module.exports = {
     context: path.join(__dirname, 'server/bundles'),
     entry: [
-        'webpack-hot-middleware/client',
         './main/main.js'
     ],
     devtool: 'source-map',
@@ -34,8 +33,6 @@ module.exports = {
         ]
     },
     plugins: [
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
         new ExtractTextPlugin('[name].css')
     ],
     postcss: () => {

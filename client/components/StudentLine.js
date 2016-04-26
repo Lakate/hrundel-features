@@ -8,8 +8,8 @@ class studentLine extends Component {
     render() {
         return (
             <tr className="student-line">
-                <td>Kate Latypova</td>
-                <td>i4got10</td>
+                <td>{ this.props.student.login }</td>
+                <td>{ this.props.student.mentor }</td>
                 <td>23</td>
                 <td>36</td>
             </tr>

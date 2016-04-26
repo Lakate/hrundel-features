@@ -7,13 +7,13 @@ require('chai').should();
 
 describe('Student model testing', function () {
     this.timeout(200000);
-    before(function (done) {
-        clearDB(done);
-    });
-
-    after(function (done) {
-        clearDB(done);
-    });
+    // before(function (done) {
+    //     clearDB(done);
+    // });
+    //
+    // after(function (done) {
+    //     clearDB(done);
+    // });
 
     it('should create a new Student', function (done) {
         const student = new Student({
@@ -40,10 +40,10 @@ describe('Student model testing', function () {
 
     it('should add task to student', function (done) {
         const task = {
-            mentor: "i4got10",
+            mentor: "Mokhov",
             number: 1,
             taskType: "webdev",
-            status: "accepted"
+            status: "pending"
         };
 
         Student.findStudent({login: 'Lakate'})
@@ -65,7 +65,7 @@ describe('Student model testing', function () {
             number: 1,
             taskType: "webdev",
             mentor: "i4got10",
-            status: "pending"
+            status: "accepted"
         };
 
         Student.findStudent({'tasks.taskType': 'webdev', 'tasks.number': 1, 'login': 'Lakate'})
@@ -75,7 +75,7 @@ describe('Student model testing', function () {
             .then(savedStudent => {
                 savedStudent.tasks[0].taskType.should.equal(task.taskType);
                 savedStudent.tasks[0].number.should.equal(task.number);
-                savedStudent.tasks[0].status.should.equal('pending');
+                savedStudent.tasks[0].status.should.equal('accepted');
                 done();
             });
     });

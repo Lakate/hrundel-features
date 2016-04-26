@@ -10,17 +10,15 @@ class studentCard extends Component {
             <div className="student-card">
                 <div className="student-card__img"></div>
                 <div className="student-card__data">
-                    <p>Kate Latypova</p>
+                    <p>Login: { this.props.selectedStudent.login }</p>
                     <hr />
-                    <p>Login: Lakate</p>
-                    <hr />
-                    <p>Mentor: i4got10</p>
+                    <p>Mentor: { this.props.selectedStudent.mentor }</p>
                     <hr />
                     <p>JS: ********//</p>
                     <hr />
-                    <p>JS: *********.</p>
+                    <p>Verstka: *********.</p>
                     <hr />
-                    <p>JS: ******</p>
+                    <p>Webdev: ******</p>
                 </div>
             </div>
         );

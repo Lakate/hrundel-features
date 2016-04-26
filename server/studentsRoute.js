@@ -3,8 +3,16 @@ const router = express.Router();
 
 const students = require('./controllers/students');
 
-router.post('/add', students.create);
-router.put('/edit', students.updateTask);
+router.get('/', (req, res) => {
+    const Students = require('./models/student');
+    Students.findAllStudents()
+        .then(students => {
+            res.json({
+                students
+            });
+        });
+});
+router.post('/refresh', students.refresh);
 
 router.get('/:id', students.getStudent);
 

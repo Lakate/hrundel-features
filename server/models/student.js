@@ -18,11 +18,19 @@ const studentsSchema = new Schema({
     tasks: [Tasks]
 });
 
+studentsSchema.statics.findAllStudents = function () {
+    return this.find({})
+        .exec()
+        .then(students => {
+            return students;
+        });
+};
+
 studentsSchema.statics.findStudent = function (query) {
     return this.findOne(query)
         .exec()
-        .then(users => {
-            return users;
+        .then(student => {
+            return student;
         });
 };
 
