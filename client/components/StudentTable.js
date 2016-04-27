@@ -20,7 +20,7 @@ class studentTable extends Component {
                     </thead>
                     <tbody>
                     {this.props.students.map(student => (
-                        <StudentLine student={student} />
+                        <StudentLine student={student} dispatch={this.props.dispatch} />
                     ))}
                     </tbody>
                 </table>

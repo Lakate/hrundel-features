@@ -23,8 +23,8 @@ function render() {
 
 render();
 
-// store.subscribe(render);
-store.subscribe(() => {
-    console.log(store.getState());
-    render();
-});
+store.subscribe(render);
+// store.subscribe(() => {
+//     console.log(store.getState());
+//     render();
+// });

@@ -28,7 +28,7 @@ const content = React.createClass({
                 <Header />
                 <Search />
                 <StudentCard selectedStudent={selectedStudent} />
-                <StudentTable students={students} />
+                <StudentTable students={students} dispatch={this.props.store.dispatch}/>
             </div>
         );
     }
