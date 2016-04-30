@@ -57,18 +57,18 @@ const taskType1 = [{
     status: "half-points",
     pr: 1
 }, {
-        mentor: "xiiivii",
-        number: 1,
-        taskType: "verstka",
-        status: "accepted",
-        pr: 1
-    }, {
-        mentor: "xiiivii",
-        number: 10,
-        taskType: "verstka",
-        status: "accepted",
-        pr: 1
-    }
+    mentor: "xiiivii",
+    number: 1,
+    taskType: "verstka",
+    status: "accepted",
+    pr: 1
+}, {
+    mentor: "xiiivii",
+    number: 10,
+    taskType: "verstka",
+    status: "accepted",
+    pr: 1
+}
 ];
 
 const taskType2 = [{

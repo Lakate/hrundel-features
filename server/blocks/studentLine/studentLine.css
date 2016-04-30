@@ -25,3 +25,12 @@
 {
     color: #f00;
 }
+
+.student-line__avatar
+{
+    opacity: .6;
+}
+.student-line__avatar:hover
+{
+    opacity: 1;
+}
