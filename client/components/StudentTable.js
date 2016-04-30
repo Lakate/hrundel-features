@@ -13,6 +13,7 @@ class studentTable extends Component {
                     <thead>
                     <tr>
                         <th className="students-table__th">Name</th>
+                        <th className="students-table__th">Login</th>
                         <th className="students-table__th">Mentor</th>
                         <th className="students-table__th">Stars</th>
                         <th className="students-table__th">Result</th>

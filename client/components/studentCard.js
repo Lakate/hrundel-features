@@ -40,6 +40,14 @@ class studentCard extends Component {
                 </div>
                 <div className="student-card-data student-card__data">
                     <p>
+                        <span className="student-card-data_bold">Name:</span>
+                        <a className="student-card-data__links" target="_blank"
+                           href={GITHUB + this.props.selectedStudent.login}>
+                            { this.props.selectedStudent.name }
+                        </a>
+                    </p>
+                    <hr />
+                    <p>
                         <span className="student-card-data_bold">Login:</span>
                         <a className="student-card-data__links" target="_blank"
                            href={GITHUB + this.props.selectedStudent.login}>
@@ -70,7 +78,7 @@ class studentCard extends Component {
                                     );
                                 } else {
                                     return (
-                                        <span className="student-card-data__task-span">
+                                        <span className="student-card-data__span">
                                             {getIcon(task.status)}
                                         </span>
                                     );
@@ -94,7 +102,7 @@ class studentCard extends Component {
                                     );
                                 } else {
                                     return (
-                                        <span className="student-card-data__task-span">
+                                        <span className="student-card-data__span">
                                             {getIcon(task.status)}
                                         </span>
                                     );
@@ -118,7 +126,7 @@ class studentCard extends Component {
                                     );
                                 } else {
                                     return (
-                                        <span className="student-card-data__task-span">
+                                        <span className="student-card-data__span">
                                             {getIcon(task.status)}
                                         </span>
                                     );

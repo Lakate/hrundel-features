@@ -38,6 +38,12 @@ class studentLine extends Component {
                 <td>
                     <a className="student-line__links" target="_blank"
                        href={GITHUB + this.props.student.login}>
+                        { this.props.student.name }
+                    </a>
+                </td>
+                <td>
+                    <a className="student-line__links" target="_blank"
+                       href={GITHUB + this.props.student.login}>
                         { this.props.student.login }
                     </a>
                 </td>

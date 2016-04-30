@@ -1,5 +1,6 @@
 'use strict';
 
+const getUserName = require('./getGitHubName');
 const mongoose = require('./mongooseConnect');
 const clearDB = require('./clearDB');
 
@@ -11,7 +12,7 @@ clearDB(() => {
     console.log('Done!');
 });
 
-const students = ['Lakate', 'danmir', 'savichev', 'dotokoto'];
+const students = ['Lakate', 'danmir', 'Savichev-Igor', 'dotokoto'];
 const mentors = ['Zhigalov', 'Mokhov', 'gogoleff', 'xiiivii'];
 
 const taskType1 = [{
@@ -151,6 +152,7 @@ for (let i = 0; i < students.length; i++) {
         mentor: mentors[i],
         avatar: "https://avatars.githubusercontent.com/" + students[i]
     });
+
     if (i % 2 === 0) {
         taskType1.forEach(task => {
             student.addTask(task);
@@ -161,4 +163,9 @@ for (let i = 0; i < students.length; i++) {
         });
     }
     student.save();
+
+    getUserName(student, (student, name) => {
+        student.name = name;
+        student.save();
+    });
 }

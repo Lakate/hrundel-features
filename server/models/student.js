@@ -14,6 +14,7 @@ const Tasks = new Schema({
 const studentsSchema = new Schema({
     login: String,
     mentor: String,
+    name: String,
     avatar: {type: String, default: 'no avatar'},
     stars: {type: Number, default: 0},
     tasks: [Tasks]
