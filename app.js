@@ -15,7 +15,7 @@ const argv = require('minimist')(process.argv.slice(2));
 const viewsDir = path.join(__dirname, 'server/bundles');
 const publicDir = path.join(__dirname, 'public');
 
-const mongoose = require('./server/scripts/mongooseConnect');
+const mongoose = require('./scripts/mongooseConnect');
 
 app.set('views', viewsDir);
 app.set('view engine', 'hbs');

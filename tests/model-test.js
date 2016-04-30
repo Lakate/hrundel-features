@@ -1,19 +1,19 @@
 'use strict';
 
-const mongoose = require('../server/scripts/mongooseConnect');
+const mongoose = require('../scripts/mongooseConnect');
 const Student = require('../server/models/student');
-const clearDB = require('../server/scripts/clearDB');
+const clearDB = require('../scripts/clearDB');
 require('chai').should();
 
 describe('Student model testing', function () {
     this.timeout(200000);
-    // before(function (done) {
-    //     clearDB(done);
-    // });
-    //
-    // after(function (done) {
-    //     clearDB(done);
-    // });
+    before(function (done) {
+        clearDB(done);
+    });
+
+    after(function (done) {
+        clearDB(done);
+    });
 
     it('should create a new Student', function (done) {
         const student = new Student({

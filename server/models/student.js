@@ -7,7 +7,8 @@ const Tasks = new Schema({
     taskType: String,
     number: Number,
     mentor: String,
-    status: String
+    status: String,
+    pr: Number
 });
 
 const studentsSchema = new Schema({

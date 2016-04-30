@@ -27,6 +27,12 @@ const content = React.createClass({
             <div>
                 <Header />
                 <Search />
+                <p>
+                    <span>✓</span> – полный балл,
+                    <span>/</span> – полбалла,
+                    <span>•</span> – проверяется,
+                    <span>✗</span> – 0 баллов
+                </p>
                 <StudentCard selectedStudent={selectedStudent} />
                 <StudentTable students={students} dispatch={this.props.store.dispatch}/>
             </div>

@@ -23,7 +23,8 @@ exports.getStudent = (req, res) => {
 function createStudent(req, res) {
     const student = {
         login: req.body.login,
-        mentor: req.body.mentor
+        mentor: req.body.mentor,
+        avatar: 'https://avatars.githubusercontent.com/' + req.body.login
     };
     const task = {
         number: req.body.number,
