@@ -20,7 +20,7 @@ class studentCard extends Component {
 
         for (let i = 1; i < tasks.length; i++) {
             if (!tasks[i]) {
-                tasks[i] = { status: 'failed'};
+                tasks[i] = {status: 'failed'};
             }
         }
         return tasks;
@@ -39,14 +39,16 @@ class studentCard extends Component {
                 <div className="student-card-data student-card__data">
                     <p>
                         <span className="student-card-data_bold">Login:</span>
-                        <a className="student-card-data__links" href={GITHUB + this.props.selectedStudent.login}>
+                        <a className="student-card-data__links"
+                           href={GITHUB + this.props.selectedStudent.login}>
                             { this.props.selectedStudent.login }
                         </a>
                     </p>
                     <hr />
                     <p>
                         <span className="student-card-data_bold">Mentor:</span>
-                        <a className="student-card-data__links" href={GITHUB + this.props.selectedStudent.mentor}>
+                        <a className="student-card-data__links"
+                           href={GITHUB + this.props.selectedStudent.mentor}>
                             { this.props.selectedStudent.mentor }
                         </a>
                     </p>
@@ -56,16 +58,20 @@ class studentCard extends Component {
                         {
                             javascript.map(task => {
                                 if (task.pr) {
-                                    const href = GH_URFU + `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
+                                    const href = GH_URFU +
+                                        `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
                                     return (
-                                        <a className="student-card-data__links" href={href} target="_blank">
+                                        <a className="student-card-data__links"
+                                           href={href} target="_blank">
                                             {getIcon(task.status)}
                                         </a>
-                                    )
+                                    );
                                 } else {
                                     return (
-                                        <span className="student-card-data__task-span">{getIcon(task.status)}</span>
-                                    )
+                                        <span className="student-card-data__task-span">
+                                            {getIcon(task.status)}
+                                        </span>
+                                    );
                                 }
                             })
                         }
@@ -76,16 +82,20 @@ class studentCard extends Component {
                         {
                             verstka.map(task => {
                                 if (task.pr) {
-                                    const href = GH_URFU + `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
+                                    const href = GH_URFU +
+                                        `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
                                     return (
-                                        <a className="student-card-data__links" href={href} target="_blank">
+                                        <a className="student-card-data__links"
+                                           href={href} target="_blank">
                                             {getIcon(task.status)}
                                         </a>
-                                    )
+                                    );
                                 } else {
                                     return (
-                                        <span className="student-card-data__task-span">{getIcon(task.status)}</span>
-                                    )
+                                        <span className="student-card-data__task-span">
+                                            {getIcon(task.status)}
+                                        </span>
+                                    );
                                 }
                             })
                         }
@@ -96,16 +106,20 @@ class studentCard extends Component {
                         {
                             webdev.map(task => {
                                 if (task.pr) {
-                                    const href = GH_URFU + `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
+                                    const href = GH_URFU +
+                                        `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
                                     return (
-                                        <a className="student-card-data__links" href={href} target="_blank">
+                                        <a className="student-card-data__links"
+                                           href={href} target="_blank">
                                             {getIcon(task.status)}
                                         </a>
-                                    )
+                                    );
                                 } else {
                                     return (
-                                        <span className="student-card-data__task-span">{getIcon(task.status)}</span>
-                                    )
+                                        <span className="student-card-data__task-span">
+                                            {getIcon(task.status)}
+                                        </span>
+                                    );
                                 }
                             })
                         }
