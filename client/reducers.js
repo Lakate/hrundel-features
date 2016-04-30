@@ -1,24 +1,33 @@
 const initialState = {
     students: [],
-    selectedStudentId: null
+    selectedStudent: {}
 };
 
 exports.boardApp = (state = initialState, action) => {
     switch (action.type) {
-        case 'UPDATE_REFRESH':
+        case 'REFRESH_STUDENT':
             return {
-                students: state.students.map(student => {
-                    if (student.id === action.selectedStudentId) {
-                        return action.student;
+                students: (() => {
+                    let newStudents = state.students.map(student => {
+                        if (student._id === action.student._id) {
+                            return action.student;
+                        }
+                        return student;
+                    });
+
+                    if (!(action.student in newStudents)) {
+                        return newStudents.concat([action.student]);
                     }
-                    return student;
-                }),
-                selectedStudentId: state.selectedStudentId
+                    return newStudents;
+                })(),
+                selectedStudent: state.selectedStudent
             };
         case 'SELECT_STUDENT':
             return {
                 students: state.students,
-                selectedStudentId: action.selectedStudentId
+                selectedStudent: (() => {
+                    return action.selectedStudent;
+                })()
             };
         default:
             return state;

@@ -11,9 +11,15 @@
 
 .student-card__img
 {
-    background: url("./girl.png");
     width: 250px;
     height: 250px;
+    padding: 10px;
+}
+
+.student-card__img img
+{
+    width: 100%;
+    border-radius: 10px;
 }
 
 .student-card__data
@@ -40,4 +46,33 @@
         float: left;
         margin-right: 10px;
     }
+}
+
+.student-card-data__links
+{
+    text-decoration: none;
+}
+
+.student-card-data__links:hover
+{
+    color: #f00;
+}
+
+.student-card-data__task-span,
+.student-card-data__links
+{
+    margin-left: 5px;
+    color: #666;
+}
+
+.student-card-data_bold
+{
+    font-weight: 800;
+}
+
+.student-line__avatar
+{
+    width: 50px;
+    border-radius: 5px;
+    margin: 5px;
 }

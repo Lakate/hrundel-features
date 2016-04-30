@@ -1,7 +1,7 @@
-var webpack = require('webpack');
-var webpackDevMiddleware = require('webpack-dev-middleware');
-var webpackHotMiddleware = require('webpack-hot-middleware');
-var config = require('./webpack.config');
+const webpack = require('webpack');
+// var webpackDevMiddleware = require('webpack-dev-middleware');
+// var webpackHotMiddleware = require('webpack-hot-middleware');
+const config = require('./webpack.config');
 
 const express = require('express');
 const app = express();
@@ -15,14 +15,14 @@ const argv = require('minimist')(process.argv.slice(2));
 const viewsDir = path.join(__dirname, 'server/bundles');
 const publicDir = path.join(__dirname, 'public');
 
-const mongoose = require('./server/scripts/mongooseConnect');
+const mongoose = require('./scripts/mongooseConnect');
 
 app.set('views', viewsDir);
 app.set('view engine', 'hbs');
 
-var compiler = webpack(config);
-app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: config.output.publicPath}));
-app.use(webpackHotMiddleware(compiler));
+// const compiler = webpack(config);
+// app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: config.output.publicPath}));
+// app.use(webpackHotMiddleware(compiler));
 
 app.use(morgan('dev'));
 app.use(express.static(publicDir));

@@ -31,3 +31,8 @@
         float: left;
     }
 }
+
+.students-table__th
+{
+    padding: 10px;
+}

@@ -7,7 +7,8 @@ const Tasks = new Schema({
     taskType: String,
     number: Number,
     mentor: String,
-    status: String
+    status: String,
+    pr: Number
 });
 
 const studentsSchema = new Schema({
@@ -18,11 +19,19 @@ const studentsSchema = new Schema({
     tasks: [Tasks]
 });
 
+studentsSchema.statics.findAllStudents = function () {
+    return this.find({})
+        .exec()
+        .then(students => {
+            return students;
+        });
+};
+
 studentsSchema.statics.findStudent = function (query) {
     return this.findOne(query)
         .exec()
-        .then(users => {
-            return users;
+        .then(student => {
+            return student;
         });
 };
 

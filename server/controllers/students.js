@@ -3,10 +3,28 @@
 const Students = require('../models/student');
 const mongoose = require('mongoose');
 
-exports.create = (req, res) => {
+exports.refresh = (req, res) => {
+    Students.findStudent({login: req.body.login})
+        .then(student => {
+            if (student) {
+                updateStudent(req, res);
+            } else {
+                createStudent(req, res);
+            }
+        });
+};
+
+exports.getStudent = (req, res) => {
+    const query = {_id: req.params.id};
+    Students.findStudent(query)
+        .then(student => res.json(student));
+};
+
+function createStudent(req, res) {
     const student = {
         login: req.body.login,
-        mentor: req.body.mentor
+        mentor: req.body.mentor,
+        avatar: 'https://avatars.githubusercontent.com/' + req.body.login
     };
     const task = {
         number: req.body.number,
@@ -19,21 +37,15 @@ exports.create = (req, res) => {
     newStudent.addTask(task);
 
     newStudent.save()
-            .then(savedStudent => {
-                res.json(savedStudent);
-            })
-            .catch(err => {
-                console.error('Error on user save: ' + err);
-            });
-};
+        .then(savedStudent => {
+            res.json(savedStudent);
+        })
+        .catch(err => {
+            console.error('Error on user save: ' + err);
+        });
+}
 
-exports.getStudent = (req, res) => {
-    const query = {_id: req.params.id};
-    Students.findStudent(query)
-        .then(student => res.json(student));
-};
-
-exports.updateTask = (req, res) => {
+function updateStudent(req, res) {
     const task = {
         number: req.body.number,
         taskType: req.body.type,
@@ -51,4 +63,4 @@ exports.updateTask = (req, res) => {
             return foundStudent.updateTask(task);
         })
         .then(savedStudent => res.json(savedStudent));
-};
+}
