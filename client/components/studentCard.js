@@ -34,12 +34,14 @@ class studentCard extends Component {
         return (
             <div className="student-card">
                 <div className="student-card__img">
-                    <img src={ this.props.selectedStudent.avatar } />
+                    <img src={ this.props.selectedStudent.avatar }
+                         alt={this.props.selectedStudent.login}
+                         title={this.props.selectedStudent.login} />
                 </div>
                 <div className="student-card-data student-card__data">
                     <p>
                         <span className="student-card-data_bold">Login:</span>
-                        <a className="student-card-data__links"
+                        <a className="student-card-data__links" target="_blank"
                            href={GITHUB + this.props.selectedStudent.login}>
                             { this.props.selectedStudent.login }
                         </a>
@@ -47,7 +49,7 @@ class studentCard extends Component {
                     <hr />
                     <p>
                         <span className="student-card-data_bold">Mentor:</span>
-                        <a className="student-card-data__links"
+                        <a className="student-card-data__links" target="_blank"
                            href={GITHUB + this.props.selectedStudent.mentor}>
                             { this.props.selectedStudent.mentor }
                         </a>

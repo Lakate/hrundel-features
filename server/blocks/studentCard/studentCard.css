@@ -69,3 +69,10 @@
 {
     font-weight: 800;
 }
+
+.student-line__avatar
+{
+    width: 50px;
+    border-radius: 5px;
+    margin: 5px;
+}

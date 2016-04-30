@@ -51,12 +51,12 @@ const taskType1 = [{
     status: "accepted",
     pr: 1
 }, {
-        mentor: "xiiivii",
-        number: 2,
-        taskType: "javascript",
-        status: "half-points",
-        pr: 1
-    }, {
+    mentor: "xiiivii",
+    number: 2,
+    taskType: "javascript",
+    status: "half-points",
+    pr: 1
+}, {
         mentor: "xiiivii",
         number: 1,
         taskType: "verstka",

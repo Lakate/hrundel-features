@@ -11,7 +11,17 @@
 .student-line td
 {
     padding: 10px;
-    vertical-align: top;
+    vertical-align: middle;
     border-top: 1px solid #ddd;
 }
 
+.student-line__links
+{
+    text-decoration: none;
+    color: #000;
+}
+
+.student-line__links:hover
+{
+    color: #f00;
+}
