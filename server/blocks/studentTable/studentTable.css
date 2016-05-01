@@ -2,7 +2,7 @@
 {
     border: 1px solid #ddd;
     border-radius: 5px;
-    min-width: 250px;
+    min-width: 420px;
     width: 100%;
     margin-bottom: 10px;
     text-align: left;
@@ -14,20 +14,29 @@
     border-collapse: collapse;
 }
 
-@media (min-width: 992px)
+@media (min-width: 1045px)
 {
     .students-table
     {
-        width: 75%;
+        width: 70%;
         float: left;
     }
 }
 
-@media (min-width: 780px)
+@media (min-width: 880px) and (max-width: 1044px)
 {
     .students-table
     {
         width: 65%;
+        float: left;
+    }
+}
+
+@media (min-width: 850px) and (max-width: 879px)
+{
+    .students-table
+    {
+        width: 60%;
         float: left;
     }
 }

@@ -1,7 +1,7 @@
 .student-card
 {
     margin-bottom: 10px;
-    min-width: 250px;
+    min-width: 420px;
     border: 1px solid #ddd;
     border-radius: 5px;
     display: flex;
@@ -28,21 +28,12 @@
     text-align: center;
 }
 
-@media (min-width: 992px)
+@media (min-width: 850px)
 {
     .student-card
     {
-        width: 25%;
-        float: left;
-        margin-right: 10px;
-    }
-}
-
-@media (min-width: 780px)
-{
-    .student-card
-    {
-        width: 30%;
+        width: 20%;
+        min-width: 300px;
         float: left;
         margin-right: 10px;
     }
