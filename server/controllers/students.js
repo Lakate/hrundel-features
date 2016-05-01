@@ -1,6 +1,7 @@
 'use strict';
 
 const Students = require('../models/student');
+const getUserName = require('../../scripts/getGitHubName');
 const mongoose = require('mongoose');
 
 exports.refresh = (req, res) => {
@@ -24,7 +25,7 @@ function createStudent(req, res) {
     const student = {
         login: req.body.login,
         mentor: req.body.mentor,
-        avatar: 'https://avatars.githubusercontent.com/' + req.body.login
+        avatar: `https://avatars.githubusercontent.com/${req.body.login}`
     };
     const task = {
         number: req.body.number,
@@ -34,8 +35,13 @@ function createStudent(req, res) {
     };
 
     const newStudent = new Students(student);
-    newStudent.addTask(task);
 
+    getUserName(newStudent, (student, name) => {
+        student.name = name;
+        student.save();
+    });
+
+    newStudent.addTask(task);
     newStudent.save()
         .then(savedStudent => {
             res.json(savedStudent);
