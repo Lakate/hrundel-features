@@ -11,3 +11,10 @@ export const selectStudent = selectedStudent => {
         selectedStudent
     };
 };
+
+export const searchStudent = text => {
+    return {
+        type: 'SEARCH_STUDENT',
+        text
+    };
+};
