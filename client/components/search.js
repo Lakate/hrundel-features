@@ -12,12 +12,14 @@ class search extends Component {
     }
 
     render() {
+        const className = this.props.foundData ?
+            'search__result_invisible' : 'search__result_visible';
         return (
             <div className="search">
                 <input className="search__input" name="search" type="text"
                        placeholder="Search people by name or login..."
                        onKeyUp={this.onKeyUp} required />
-                <button className="search__button" type="submit">Search</button>
+                <h3 className={'search__result ' + className}>Nothing found :(</h3>
             </div>
         );
     }

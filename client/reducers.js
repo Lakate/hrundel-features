@@ -1,6 +1,7 @@
 const initialState = {
     students: [],
     filteredStudents: [],
+    foundData: true,
     selectedStudent: {}
 };
 
@@ -22,23 +23,28 @@ exports.boardApp = (state = initialState, action) => {
                     return newStudents;
                 })(),
                 filteredStudents: state.filteredStudents,
+                foundData: true,
                 selectedStudent: state.selectedStudent
             };
         case 'SELECT_STUDENT':
             return {
                 students: state.students,
                 filteredStudents: state.filteredStudents,
+                foundData: true,
                 selectedStudent: (() => {
                     return action.selectedStudent;
                 })()
             };
         case 'SEARCH_STUDENT':
+            const filteredData = state.students.filter(student => {
+                return student.name.toLowerCase().includes(action.text.toLowerCase()) ||
+                    student.login.toLowerCase().includes(action.text.toLowerCase());
+            });
+
             return {
                 students: state.students,
-                filteredStudents: state.students.filter(student => {
-                    return student.name.toLowerCase().includes(action.text.toLowerCase()) ||
-                        student.login.toLowerCase().includes(action.text.toLowerCase());
-                }),
+                filteredStudents: filteredData,
+                foundData: filteredData.length > 0,
                 selectedStudent: state.selectedStudent
             };
         default:

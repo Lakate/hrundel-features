@@ -21,12 +21,13 @@ const content = React.createClass({
     },
 
     render: function () {
-        const {students, filteredStudents, selectedStudent} = this.props.store.getState();
+        const {students, filteredStudents, foundData, selectedStudent} =
+            this.props.store.getState();
 
         return (
             <div>
                 <Header />
-                <Search dispatch={this.props.store.dispatch} />
+                <Search foundData={foundData} dispatch={this.props.store.dispatch} />
                 <p>
                     <span>✓</span> – полный балл,
                     <span>/</span> – полбалла,
