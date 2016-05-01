@@ -7,6 +7,9 @@ class studentTable extends Component {
     }
 
     render() {
+        const visibleStudents = this.props.filteredStudents.length > 0 ?
+            this.props.filteredStudents : this.props.students;
+
         return (
             <div className="students-table">
                 <table>
@@ -20,9 +23,12 @@ class studentTable extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {this.props.students.map(student => (
-                        <StudentLine student={student} dispatch={this.props.dispatch} />
-                    ))}
+                    {
+                        visibleStudents.map(student => (
+                            <StudentLine key={student._id} student={student}
+                                         dispatch={this.props.dispatch} />
+                        ))
+                    }
                     </tbody>
                 </table>
             </div>
