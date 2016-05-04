@@ -22,7 +22,6 @@ const studentsSchema = new Schema({
 
 studentsSchema.statics.findAllStudents = function () {
     return this.find({})
-        .exec()
         .then(students => {
             return students;
         });
@@ -30,7 +29,6 @@ studentsSchema.statics.findAllStudents = function () {
 
 studentsSchema.statics.findStudent = function (query) {
     return this.findOne(query)
-        .exec()
         .then(student => {
             return student;
         });

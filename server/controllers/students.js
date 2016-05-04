@@ -3,16 +3,24 @@
 const Students = require('../models/student');
 const getUserName = require('../../scripts/getGitHubName');
 const mongoose = require('mongoose');
+const co = require('co');
 
 exports.refresh = (req, res) => {
-    Students.findStudent({login: req.body.login})
-        .then(student => {
-            if (student) {
-                updateStudent(req, res);
-            } else {
-                createStudent(req, res);
-            }
-        });
+    const pullRequests = req.body.data;
+
+    co(function * () {
+        for (let i = 0; i < pullRequests.length; i++) {
+            yield Students.findStudent({login: pullRequests[i].login})
+                .then(student => {
+                    if (student) {
+                        return updateStudent({body: pullRequests[i]}, student);
+                    } else {
+                        return createStudent({body: pullRequests[i]}, res);
+                    }
+                });
+        }
+        res.send('OK');
+    });
 };
 
 exports.getStudent = (req, res) => {
@@ -42,16 +50,16 @@ function createStudent(req, res) {
     });
 
     newStudent.addTask(task);
-    newStudent.save()
+    return newStudent.save()
         .then(savedStudent => {
-            res.json(savedStudent);
+            return savedStudent;
         })
         .catch(err => {
             console.error('Error on user save: ' + err);
         });
 }
 
-function updateStudent(req, res) {
+function updateStudent(req, student) {
     const task = {
         number: req.body.number,
         taskType: req.body.type,
@@ -64,9 +72,12 @@ function updateStudent(req, res) {
         'login': req.body.login
     };
 
-    Students.findStudent(query)
+    return Students.findStudent(query)
         .then(foundStudent => {
-            return foundStudent.updateTask(task);
-        })
-        .then(savedStudent => res.json(savedStudent));
+            if (foundStudent) {
+                return foundStudent.updateTask(task);
+            } else {
+                return student.addTask(task);
+            }
+        });
 }
