@@ -9,7 +9,7 @@ const Student = require('../server/models/student');
 require('chai').should();
 
 clearDB(() => {
-    console.log('Done!');
+    console.log('clear DB');
 });
 
 const students = ['Lakate', 'danmir', 'Savichev-Igor', 'dotokoto'];
@@ -45,32 +45,7 @@ const taskType1 = [{
     taskType: "webdev",
     status: "half-points",
     pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 1,
-    taskType: "javascript",
-    status: "accepted",
-    pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 2,
-    taskType: "javascript",
-    status: "half-points",
-    pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 1,
-    taskType: "verstka",
-    status: "accepted",
-    pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 10,
-    taskType: "verstka",
-    status: "accepted",
-    pr: 1
-}
-];
+}];
 
 const taskType2 = [{
     mentor: "Zhigalov",
@@ -85,64 +60,10 @@ const taskType2 = [{
     status: "accepted",
     pr: 1
 }, {
-    mentor: "gogoleff",
+    mentor: "Zhigalov",
     number: 4,
     taskType: "webdev",
-    status: "accepted",
-    pr: 1
-}, {
-    mentor: "Zhigalov",
-    number: 2,
-    taskType: "webdev",
-    status: "accepted",
-    pr: 1
-}, {
-    mentor: "Zhigalov",
-    number: 5,
-    taskType: "webdev",
     status: "half-points",
-    pr: 1
-}, {
-    mentor: "Zhigalov",
-    number: 1,
-    taskType: "javascript",
-    status: "accepted",
-    pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 2,
-    taskType: "javascript",
-    status: "half-points",
-    pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 1,
-    taskType: "verstka",
-    status: "accepted",
-    pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 10,
-    taskType: "verstka",
-    status: "accepted",
-    pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 4,
-    taskType: "javascript",
-    status: "half-points",
-    pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 7,
-    taskType: "javascript",
-    status: "half-points",
-    pr: 1
-}, {
-    mentor: "xiiivii",
-    number: 10,
-    taskType: "javascript",
-    status: "accepted",
     pr: 1
 }];
 
@@ -169,3 +90,5 @@ for (let i = 0; i < students.length; i++) {
         student.save();
     });
 }
+
+console.log('Done!');

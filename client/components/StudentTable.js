@@ -15,10 +15,11 @@ class studentTable extends Component {
                 <table>
                     <thead>
                     <tr>
-                        <th className="students-table__th">Name</th>
+                        <th className="students-table__th">
+                            Name <span className="sorting">▲</span>
+                        </th>
                         <th className="students-table__th">Login</th>
                         <th className="students-table__th">Mentor</th>
-                        <th className="students-table__th">Stars</th>
                         <th className="students-table__th">Result</th>
                     </tr>
                     </thead>

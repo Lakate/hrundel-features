@@ -55,7 +55,6 @@ class studentLine extends Component {
                              alt={this.props.student.mentor} title={this.props.student.mentor}/>
                     </a>
                 </td>
-                <td>23</td>
                 <td>{results}</td>
             </tr>
         );

@@ -1,6 +1,4 @@
 const webpack = require('webpack');
-// var webpackDevMiddleware = require('webpack-dev-middleware');
-// var webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config');
 
 const express = require('express');
@@ -11,6 +9,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const hbs = require('hbs');
 const argv = require('minimist')(process.argv.slice(2));
+const favicon = require('express-favicon');
 
 const viewsDir = path.join(__dirname, 'server/bundles');
 const publicDir = path.join(__dirname, 'public');
@@ -20,12 +19,9 @@ const mongoose = require('./scripts/mongooseConnect');
 app.set('views', viewsDir);
 app.set('view engine', 'hbs');
 
-// const compiler = webpack(config);
-// app.use(webpackDevMiddleware(compiler, {noInfo: true, publicPath: config.output.publicPath}));
-// app.use(webpackHotMiddleware(compiler));
-
 app.use(morgan('dev'));
 app.use(express.static(publicDir));
+app.use(favicon('./favicon.ico'));
 
 hbs.registerPartials(path.join(__dirname, 'server/blocks'));
 
