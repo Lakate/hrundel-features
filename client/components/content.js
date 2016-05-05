@@ -3,7 +3,7 @@ import Header from './header';
 import Search from './search';
 import StudentTable from './studentTable';
 import StudentCard from './studentCard';
-import {refreshStudent, selectStudent} from '../actions';
+import {refreshStudent, selectStudent, filterStudents} from '../actions';
 
 const content = React.createClass({
     componentWillMount: function () {
@@ -17,6 +17,9 @@ const content = React.createClass({
                 data.students.forEach(student => {
                     this.props.store.dispatch(refreshStudent(student));
                 });
+            })
+            .then(() => {
+                this.props.store.dispatch(filterStudents('result', true));
             });
     },
 

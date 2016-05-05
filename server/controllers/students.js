@@ -77,9 +77,11 @@ function updateStudent(req, student) {
     return Students.findStudent(query)
         .then(foundStudent => {
             if (foundStudent) {
-                return foundStudent.updateTask(task);
+                foundStudent.updateTask(task);
+                return foundStudent.updateResult();
             } else {
-                return student.addTask(task);
+                student.addTask(task);
+                return student.updateResult();
             }
         });
 }

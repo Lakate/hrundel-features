@@ -9,7 +9,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const hbs = require('hbs');
 const argv = require('minimist')(process.argv.slice(2));
-const favicon = require('express-favicon');
+const favicon = require('serve-favicon');
 
 const viewsDir = path.join(__dirname, 'server/bundles');
 const publicDir = path.join(__dirname, 'public');
@@ -21,10 +21,10 @@ app.set('view engine', 'hbs');
 
 app.use(morgan('dev'));
 app.use(express.static(publicDir));
-app.use(favicon('./favicon.ico'));
 
 hbs.registerPartials(path.join(__dirname, 'server/blocks'));
 
+app.use(favicon(path.join(__dirname, './favicon.ico')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false

@@ -77,10 +77,12 @@ for (let i = 0; i < students.length; i++) {
     if (i % 2 === 0) {
         taskType1.forEach(task => {
             student.addTask(task);
+            student.updateResult();
         });
     } else {
         taskType2.forEach(task => {
             student.addTask(task);
+            student.updateResult();
         });
     }
     student.save();

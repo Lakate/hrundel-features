@@ -17,7 +17,8 @@ const studentsSchema = new Schema({
     name: String,
     avatar: {type: String, default: 'no avatar'},
     stars: {type: Number, default: 0},
-    tasks: [Tasks]
+    tasks: [Tasks],
+    result: 0
 });
 
 studentsSchema.statics.findAllStudents = function () {
@@ -52,6 +53,24 @@ studentsSchema.methods.updateTask = function (newTask) {
         }
     }
 
+    return this.save()
+        .then(savedStudent => {
+            return savedStudent;
+        });
+};
+
+studentsSchema.methods.updateResult = function () {
+    let currentReult = 0;
+
+    for (let i in this.tasks) {
+        if (this.tasks[i].status === 'accepted') {
+            currentReult += 1;
+        } else if (this.tasks[i].status === 'half-points') {
+            currentReult += 0.5;
+        }
+    }
+
+    this.result = currentReult;
     return this.save()
         .then(savedStudent => {
             return savedStudent;

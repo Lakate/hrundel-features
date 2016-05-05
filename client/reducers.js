@@ -5,7 +5,7 @@ const initialState = {
     selectedStudent: {},
     taskCounter: 0,
     filterType: 'result',
-    filterDirection: 'DESC'
+    isDesc: true
 };
 
 exports.boardApp = (state = initialState, action) => {
@@ -28,7 +28,7 @@ exports.boardApp = (state = initialState, action) => {
                 filteredStudents: state.filteredStudents,
                 foundData: true,
                 filterType: state.filterType,
-                filterDirection: state.filterDirection,
+                idDesc: state.isDesc,
                 taskCounter: (() => {
                     let currentMax = state.taskCounter;
 
@@ -47,7 +47,7 @@ exports.boardApp = (state = initialState, action) => {
                 filteredStudents: state.filteredStudents,
                 foundData: true,
                 filterType: state.filterType,
-                filterDirection: state.filterDirection,
+                idDesc: state.isDesc,
                 taskCounter: state.taskCounter,
                 selectedStudent: (() => {
                     return action.selectedStudent;
@@ -64,25 +64,41 @@ exports.boardApp = (state = initialState, action) => {
                 filteredStudents: filteredData,
                 foundData: filteredData.length > 0,
                 filterType: state.filterType,
-                filterDirection: state.filterDirection,
+                idDesc: state.isDesc,
                 taskCounter: state.taskCounter,
                 selectedStudent: state.selectedStudent
             };
-        // case 'FILTER_STUDENTS':
-        //     const filteredData = state.students.sort(student => {
-        //         return student.name.toLowerCase().includes(action.text.toLowerCase()) ||
-        //             student.login.toLowerCase().includes(action.text.toLowerCase());
-        //     });
-        //
-        //     return {
-        //         students: state.students,
-        //         filteredStudents: filteredData,
-        //         foundData: filteredData.length > 0,
-        //         filterType: action.filterType,
-        //         filterDirection: action.filterDirection,
-        //         taskCounter: state.taskCounter,
-        //         selectedStudent: state.selectedStudent
-        //     };
+        case 'FILTER_STUDENTS':
+            function compare(a, b) {
+                if (action.isDesc) {
+                    if (a[action.filterType] > b[action.filterType]) {
+                        return -1;
+                    }
+                    if (a[action.filterType] < b[action.filterType]) {
+                        return 1;
+                    }
+                } else {
+                    if (a[action.filterType] < b[action.filterType]) {
+                        return -1;
+                    }
+                    if (a[action.filterType] > b[action.filterType]) {
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+
+            const sortedData = state.students.sort(compare);
+
+            return {
+                students: sortedData,
+                filteredStudents: state.filteredStudents,
+                foundData: sortedData.length > 0,
+                filterType: action.filterType,
+                idDesc: action.isDesc,
+                taskCounter: state.taskCounter,
+                selectedStudent: state.selectedStudent
+            };
         default:
             return state;
     }
