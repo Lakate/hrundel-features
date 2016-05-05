@@ -3,7 +3,6 @@
 const Students = require('../models/student');
 const getUserName = require('../../scripts/getGitHubName');
 const mongoose = require('mongoose');
-const co = require('co');
 
 exports.refresh = (req, res) => {
     Students.findStudent({login: req.body.login})
