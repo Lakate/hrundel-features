@@ -6,21 +6,18 @@ const mongoose = require('mongoose');
 const co = require('co');
 
 exports.refresh = (req, res) => {
-    const pullRequests = req.body.data;
-
-    co(function * () {
-        for (let i = 0; i < pullRequests.length; i++) {
-            yield Students.findStudent({login: pullRequests[i].login})
-                .then(student => {
-                    if (student) {
-                        return updateStudent({body: pullRequests[i]}, student);
-                    } else {
-                        return createStudent({body: pullRequests[i]}, res);
-                    }
-                });
-        }
-        res.send('OK');
-    });
+    Students.findStudent({login: req.body.login})
+        .then(student => {
+            console.log(student);
+            if (student) {
+                return updateStudent(req, student);
+            } else {
+                return createStudent(req);
+            }
+        })
+        .then(() => {
+            res.send('OK');
+        });
 };
 
 exports.getStudent = (req, res) => {
@@ -29,7 +26,9 @@ exports.getStudent = (req, res) => {
         .then(student => res.json(student));
 };
 
-function createStudent(req, res) {
+function createStudent(req) {
+    console.log(req.body.login);
+
     const student = {
         login: req.body.login,
         mentor: req.body.mentor,
@@ -44,13 +43,13 @@ function createStudent(req, res) {
     };
 
     const newStudent = new Students(student);
-
     getUserName(newStudent, (student, name) => {
         student.name = name;
         student.save();
     });
 
     newStudent.addTask(task);
+    console.log(newStudent);
     return newStudent.save()
         .then(savedStudent => {
             return savedStudent;
