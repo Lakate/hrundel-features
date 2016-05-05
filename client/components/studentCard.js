@@ -9,16 +9,14 @@ class studentCard extends Component {
         this.getTasks = this.getTasks.bind(this);
     }
 
-    getTasks(type) {
+    getTasks() {
         const allTasks = this.props.selectedStudent.tasks;
         let tasks = [];
         for (let i in allTasks) {
-            if (allTasks[i].taskType === type) {
-                tasks[allTasks[i].number] = allTasks[i];
-            }
+            tasks[allTasks[i].number] = allTasks[i];
         }
 
-        for (let i = 1; i < tasks.length; i++) {
+        for (let i = 1; i <= this.props.taskCounter; i++) {
             if (!tasks[i]) {
                 tasks[i] = {status: 'failed'};
             }
@@ -27,9 +25,7 @@ class studentCard extends Component {
     }
 
     render() {
-        const verstka = this.getTasks('verstka');
-        const javascript = this.getTasks('javascript');
-        const webdev = this.getTasks('webdev');
+        const webdev = this.getTasks();
 
         return (
             <div className="student-card">
@@ -61,54 +57,6 @@ class studentCard extends Component {
                            href={GITHUB + this.props.selectedStudent.mentor}>
                             { this.props.selectedStudent.mentor }
                         </a>
-                    </p>
-                    <hr />
-                    <p>
-                        <span className="student-card-data_bold">JS:</span>
-                        {
-                            javascript.map(task => {
-                                if (task.pr) {
-                                    const href = GH_URFU +
-                                        `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
-                                    return (
-                                        <a className="student-card-data__links"
-                                           href={href} target="_blank">
-                                            {getIcon(task.status)}
-                                        </a>
-                                    );
-                                } else {
-                                    return (
-                                        <span className="student-card-data__span">
-                                            {getIcon(task.status)}
-                                        </span>
-                                    );
-                                }
-                            })
-                        }
-                    </p>
-                    <hr />
-                    <p>
-                        <span className="student-card-data_bold">Verstka:</span>
-                        {
-                            verstka.map(task => {
-                                if (task.pr) {
-                                    const href = GH_URFU +
-                                        `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
-                                    return (
-                                        <a className="student-card-data__links"
-                                           href={href} target="_blank">
-                                            {getIcon(task.status)}
-                                        </a>
-                                    );
-                                } else {
-                                    return (
-                                        <span className="student-card-data__span">
-                                            {getIcon(task.status)}
-                                        </span>
-                                    );
-                                }
-                            })
-                        }
                     </p>
                     <hr />
                     <p>

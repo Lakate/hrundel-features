@@ -3,7 +3,7 @@ import Header from './header';
 import Search from './search';
 import StudentTable from './studentTable';
 import StudentCard from './studentCard';
-import {refreshStudent, selectStudent} from '../actions';
+import {refreshStudent, selectStudent, filterStudents} from '../actions';
 
 const content = React.createClass({
     componentWillMount: function () {
@@ -17,11 +17,14 @@ const content = React.createClass({
                 data.students.forEach(student => {
                     this.props.store.dispatch(refreshStudent(student));
                 });
+            })
+            .then(() => {
+                this.props.store.dispatch(filterStudents('result', true));
             });
     },
 
     render: function () {
-        const {students, filteredStudents, foundData, selectedStudent} =
+        const {students, filteredStudents, foundData, selectedStudent, taskCounter} =
             this.props.store.getState();
 
         return (
@@ -34,7 +37,7 @@ const content = React.createClass({
                     <span>•</span> – проверяется,
                     <span>✗</span> – 0 баллов
                 </p>
-                <StudentCard selectedStudent={selectedStudent} />
+                <StudentCard selectedStudent={selectedStudent} taskCounter={taskCounter} />
                 <StudentTable students={students} filteredStudents={filteredStudents}
                               dispatch={this.props.store.dispatch}/>
             </div>

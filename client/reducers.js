@@ -2,7 +2,10 @@ const initialState = {
     students: [],
     filteredStudents: [],
     foundData: true,
-    selectedStudent: {}
+    selectedStudent: {},
+    taskCounter: 0,
+    filterType: 'result',
+    isDesc: true
 };
 
 exports.boardApp = (state = initialState, action) => {
@@ -24,6 +27,18 @@ exports.boardApp = (state = initialState, action) => {
                 })(),
                 filteredStudents: state.filteredStudents,
                 foundData: true,
+                filterType: state.filterType,
+                idDesc: state.isDesc,
+                taskCounter: (() => {
+                    let currentMax = state.taskCounter;
+
+                    for (let i in action.student.tasks) {
+                        if (action.student.tasks[i].number > currentMax) {
+                            currentMax = action.student.tasks[i].number;
+                        }
+                    }
+                    return currentMax;
+                })(),
                 selectedStudent: state.selectedStudent
             };
         case 'SELECT_STUDENT':
@@ -31,6 +46,9 @@ exports.boardApp = (state = initialState, action) => {
                 students: state.students,
                 filteredStudents: state.filteredStudents,
                 foundData: true,
+                filterType: state.filterType,
+                idDesc: state.isDesc,
+                taskCounter: state.taskCounter,
                 selectedStudent: (() => {
                     return action.selectedStudent;
                 })()
@@ -45,6 +63,40 @@ exports.boardApp = (state = initialState, action) => {
                 students: state.students,
                 filteredStudents: filteredData,
                 foundData: filteredData.length > 0,
+                filterType: state.filterType,
+                idDesc: state.isDesc,
+                taskCounter: state.taskCounter,
+                selectedStudent: state.selectedStudent
+            };
+        case 'FILTER_STUDENTS':
+            function compare(a, b) {
+                if (action.isDesc) {
+                    if (a[action.filterType] > b[action.filterType]) {
+                        return -1;
+                    }
+                    if (a[action.filterType] < b[action.filterType]) {
+                        return 1;
+                    }
+                } else {
+                    if (a[action.filterType] < b[action.filterType]) {
+                        return -1;
+                    }
+                    if (a[action.filterType] > b[action.filterType]) {
+                        return 1;
+                    }
+                }
+                return 0;
+            }
+
+            const sortedData = state.students.sort(compare);
+
+            return {
+                students: sortedData,
+                filteredStudents: state.filteredStudents,
+                foundData: sortedData.length > 0,
+                filterType: action.filterType,
+                idDesc: action.isDesc,
+                taskCounter: state.taskCounter,
                 selectedStudent: state.selectedStudent
             };
         default:

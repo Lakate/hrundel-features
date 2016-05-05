@@ -39,7 +39,8 @@ function createStudent(req, res) {
         number: req.body.number,
         taskType: req.body.type,
         mentor: req.body.mentor,
-        status: req.body.status
+        status: req.body.status,
+        pr: req.body.pr
     };
 
     const newStudent = new Students(student);
@@ -64,7 +65,8 @@ function updateStudent(req, student) {
         number: req.body.number,
         taskType: req.body.type,
         mentor: req.body.mentor,
-        status: req.body.status
+        status: req.body.status,
+        pr: req.body.pr
     };
     const query = {
         'tasks.taskType': req.body.type,
@@ -75,9 +77,11 @@ function updateStudent(req, student) {
     return Students.findStudent(query)
         .then(foundStudent => {
             if (foundStudent) {
-                return foundStudent.updateTask(task);
+                foundStudent.updateTask(task);
+                return foundStudent.updateResult();
             } else {
-                return student.addTask(task);
+                student.addTask(task);
+                return student.updateResult();
             }
         });
 }

@@ -18,3 +18,11 @@ export const searchStudent = text => {
         text
     };
 };
+
+export const filterStudents = (filterType, isDesc) => {
+    return {
+        type: 'FILTER_STUDENTS',
+        filterType,
+        isDesc
+    };
+};
