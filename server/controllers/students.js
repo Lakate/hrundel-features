@@ -3,20 +3,35 @@
 const Students = require('../models/student');
 const getUserName = require('../../scripts/getGitHubName');
 const mongoose = require('mongoose');
+const co = require('co');
 
 exports.refresh = (req, res) => {
-    Students.findStudent({login: req.body.login})
-        .then(student => {
-            console.log(student);
-            if (student) {
-                return updateStudent(req, student);
-            } else {
-                return createStudent(req);
-            }
-        })
-        .then(() => {
-            res.send('OK');
-        });
+    let pullRequests = req.body;
+
+    co(function * () {
+        for (let i = 0; i < pullRequests.length; i++) {
+            yield Students.findStudent({login: pullRequests[i].login})
+                .then(student => {
+                    if (student) {
+                        return updateStudent({body: pullRequests[i]}, student);
+                    } else {
+                        return createStudent({body: pullRequests[i]}, res);
+                    }
+                });
+        }
+        res.send('OK');
+    });
+
+    // Students.findStudent({login: pullRequests.login})
+    //     .then(student => {
+    //         if (student) {
+    //             console.log(pullRequests.login, 'FIND');
+    //             return updateStudent({body: pullRequests}, student);
+    //         } else {
+    //             console.log(pullRequests.login, 'NOT FIND');
+    //             return createStudent({body: pullRequests}, res);
+    //         }
+    //     }).then(() => res.send('OK'));
 };
 
 exports.getStudent = (req, res) => {
@@ -26,8 +41,6 @@ exports.getStudent = (req, res) => {
 };
 
 function createStudent(req) {
-    console.log(req.body.login);
-
     const student = {
         login: req.body.login,
         mentor: req.body.mentor,
@@ -42,14 +55,15 @@ function createStudent(req) {
     };
 
     const newStudent = new Students(student);
-    getUserName(newStudent, (student, name) => {
-        student.name = name;
-        student.save();
-    });
-
-    newStudent.addTask(task);
-    console.log(newStudent);
-    return newStudent.save()
+    return newStudent.addTask(task)
+        .then(() => newStudent.updateResult())
+        .then(() => {
+            getUserName(newStudent, (student, name) => {
+                student.name = name;
+                student.save();
+            });
+        })
+        .then(() => newStudent.save())
         .then(savedStudent => {
             return savedStudent;
         })
@@ -75,11 +89,12 @@ function updateStudent(req, student) {
     return Students.findStudent(query)
         .then(foundStudent => {
             if (foundStudent) {
-                foundStudent.updateTask(task);
-                return foundStudent.updateResult();
+                student = foundStudent;
+                return foundStudent.updateTask(task);
             } else {
-                student.addTask(task);
-                return student.updateResult();
+                return student.addTask(task);
             }
+        }).then(() => {
+            return student.updateResult();
         });
 }
