@@ -60,17 +60,17 @@ studentsSchema.methods.updateTask = function (newTask) {
 };
 
 studentsSchema.methods.updateResult = function () {
-    let currentReult = 0;
+    let currentResult = 0;
 
     for (let i in this.tasks) {
         if (this.tasks[i].status === 'accepted') {
-            currentReult += 1;
+            currentResult += 1;
         } else if (this.tasks[i].status === 'half-points') {
-            currentReult += 0.5;
+            currentResult += 0.5;
         }
     }
 
-    this.result = currentReult;
+    this.result = currentResult;
     return this.save()
         .then(savedStudent => {
             return savedStudent;

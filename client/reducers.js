@@ -55,7 +55,8 @@ exports.boardApp = (state = initialState, action) => {
             };
         case 'SEARCH_STUDENT':
             const filteredData = state.students.filter(student => {
-                return student.name.toLowerCase().includes(action.text.toLowerCase()) ||
+                return (student.name &&
+                    student.name.toLowerCase().includes(action.text.toLowerCase())) ||
                     student.login.toLowerCase().includes(action.text.toLowerCase());
             });
 
