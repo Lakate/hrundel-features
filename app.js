@@ -47,6 +47,9 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(require('express-bunyan-logger')());
+app.use(require('express-bunyan-logger').errorLogger());
+
 require('./server/routes')(app);
 
 app.set('port', (process.env.PORT || 5000));
