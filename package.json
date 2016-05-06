@@ -63,7 +63,7 @@
     "deploy:dynamic": "git push heroku master",
     "deploy:static": "surge -p ./public -d hrundel-board.surge.sh",
     "deploy": "npm-run-all deploy:*",
-    "watch": "webpack-dev-server --progress --colors"
+    "watch": "webpack --watch --progress --colors"
   },
   "repository": {
     "type": "git",

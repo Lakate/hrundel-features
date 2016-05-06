@@ -54,16 +54,19 @@ exports.boardApp = (state = initialState, action) => {
                 })()
             };
         case 'SEARCH_STUDENT':
-            const filteredData = state.students.filter(student => {
+            let filteredData = state.students.filter(student => {
                 return (student.name &&
                     student.name.toLowerCase().includes(action.text.toLowerCase())) ||
                     student.login.toLowerCase().includes(action.text.toLowerCase());
             });
+            if (action.text === '') {
+                filteredData = [];
+            }
 
             return {
                 students: state.students,
                 filteredStudents: filteredData,
-                foundData: filteredData.length > 0,
+                foundData: action.text === '' ? true : filteredData.length > 0,
                 filterType: state.filterType,
                 idDesc: state.isDesc,
                 taskCounter: state.taskCounter,
