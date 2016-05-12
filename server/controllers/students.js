@@ -21,17 +21,6 @@ exports.refresh = (req, res) => {
         }
         res.send('OK');
     });
-
-    // Students.findStudent({login: pullRequests.login})
-    //     .then(student => {
-    //         if (student) {
-    //             console.log(pullRequests.login, 'FIND');
-    //             return updateStudent({body: pullRequests}, student);
-    //         } else {
-    //             console.log(pullRequests.login, 'NOT FIND');
-    //             return createStudent({body: pullRequests}, res);
-    //         }
-    //     }).then(() => res.send('OK'));
 };
 
 exports.getStudent = (req, res) => {
@@ -59,7 +48,12 @@ function createStudent(req) {
         .then(() => newStudent.updateResult())
         .then(() => {
             getUserName(newStudent, (student, name) => {
-                student.name = name;
+                console.log(student, name);
+                if (name) {
+                    student.name = name;
+                } else {
+                    student.name = student.login;
+                }
                 student.save();
             });
         })

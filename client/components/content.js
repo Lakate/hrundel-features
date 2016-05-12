@@ -24,7 +24,7 @@ const content = React.createClass({
     },
 
     render: function () {
-        const {students, filteredStudents, foundData, selectedStudent, taskCounter} =
+        const {students, filteredStudents, foundData, findMentor, selectedStudent, taskCounter} =
             this.props.store.getState();
 
         return (
@@ -38,7 +38,8 @@ const content = React.createClass({
                     <span>✗</span> – 0 баллов
                 </p>
                 <StudentCard selectedStudent={selectedStudent} taskCounter={taskCounter} />
-                <StudentTable students={students} filteredStudents={filteredStudents}
+                <StudentTable students={students} findMentor={findMentor}
+                              filteredStudents={filteredStudents}
                               dispatch={this.props.store.dispatch}/>
             </div>
         );

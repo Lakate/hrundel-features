@@ -64,9 +64,17 @@ studentsSchema.methods.updateResult = function () {
 
     for (let i in this.tasks) {
         if (this.tasks[i].status === 'accepted') {
-            currentResult += 1;
-        } else if (this.tasks[i].status === 'half-points') {
-            currentResult += 0.5;
+            if (this.tasks[i].number === 5 || this.tasks[i].number === 7) {
+                currentResult += 2;
+            } else {
+                currentResult += 1;
+            }
+        } else if (this.tasks[i].status === 'half-accepted') {
+            if (this.tasks[i].number === 5 || this.tasks[i].number === 7) {
+                currentResult += 1;
+            } else {
+                currentResult += 0.5;
+            }
         }
     }
 

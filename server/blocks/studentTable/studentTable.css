@@ -45,3 +45,18 @@
 {
     padding: 10px;
 }
+
+.students-table__clear_visible
+{
+    display: inline-block;
+}
+
+.students-table__clear_invisible
+{
+    display: none;
+}
+
+.students-table__clear
+{
+    margin-left: 3px;
+}
