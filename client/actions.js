@@ -26,3 +26,10 @@ export const filterStudents = (filterType, isDesc) => {
         isDesc
     };
 };
+
+export const filterMentor = mentor => {
+    return {
+        type: 'FILTER_MENTOR',
+        mentor
+    };
+};

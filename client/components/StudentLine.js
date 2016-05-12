@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {selectStudent} from '../actions';
+import {selectStudent, filterMentor} from '../actions';
 
 const GITHUB = "http://github.com/";
 const GH_AVATAR = "https://avatars.githubusercontent.com/";
@@ -12,6 +12,10 @@ class studentLine extends Component {
 
     handleClick() {
         this.props.dispatch(selectStudent(this.props.student));
+    }
+
+    sort() {
+        this.props.dispatch(filterMentor(this.props.student.mentor));
     }
 
     render() {
@@ -30,12 +34,10 @@ class studentLine extends Component {
                     </a>
                 </td>
                 <td>
-                    <a className="student-line__links" target="_blank"
-                       href={GITHUB + this.props.student.mentor}>
-                        <img className="student-line__avatar"
-                             src={ GH_AVATAR + this.props.student.mentor }
-                             alt={this.props.student.mentor} title={this.props.student.mentor}/>
-                    </a>
+                    <img className="student-line__avatar"
+                         src={ GH_AVATAR + this.props.student.mentor }
+                         alt={this.props.student.mentor} title={this.props.student.mentor}
+                         onClick={this.sort.bind(this)} />
                 </td>
                 <td>{this.props.student.result}</td>
             </tr>

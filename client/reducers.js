@@ -2,6 +2,7 @@ const initialState = {
     students: [],
     filteredStudents: [],
     foundData: true,
+    findMentor: false,
     selectedStudent: {},
     taskCounter: 0,
     filterType: 'result',
@@ -27,6 +28,7 @@ exports.boardApp = (state = initialState, action) => {
                 })(),
                 filteredStudents: state.filteredStudents,
                 foundData: true,
+                findMentor: state.findMentor,
                 filterType: state.filterType,
                 idDesc: state.isDesc,
                 taskCounter: (() => {
@@ -46,6 +48,7 @@ exports.boardApp = (state = initialState, action) => {
                 students: state.students,
                 filteredStudents: state.filteredStudents,
                 foundData: true,
+                findMentor: state.findMentor,
                 filterType: state.filterType,
                 idDesc: state.isDesc,
                 taskCounter: state.taskCounter,
@@ -67,6 +70,7 @@ exports.boardApp = (state = initialState, action) => {
                 students: state.students,
                 filteredStudents: filteredData,
                 foundData: action.text === '' ? true : filteredData.length > 0,
+                findMentor: state.findMentor,
                 filterType: state.filterType,
                 idDesc: state.isDesc,
                 taskCounter: state.taskCounter,
@@ -98,11 +102,31 @@ exports.boardApp = (state = initialState, action) => {
                 students: sortedData,
                 filteredStudents: state.filteredStudents,
                 foundData: sortedData.length > 0,
+                findMentor: state.findMentor,
                 filterType: action.filterType,
                 idDesc: action.isDesc,
                 taskCounter: state.taskCounter,
                 selectedStudent: state.selectedStudent
             };
+        case 'FILTER_MENTOR':
+            let filteredByMentor = state.students.filter(student => {
+                return (student.mentor === action.mentor);
+            });
+            if (!action.mentor) {
+                filteredByMentor = [];
+            }
+
+            return {
+                students: state.students,
+                filteredStudents: filteredByMentor,
+                foundData: state.foundData,
+                findMentor: filteredByMentor.length > 0,
+                filterType: state.filterType,
+                idDesc: state.isDesc,
+                taskCounter: state.taskCounter,
+                selectedStudent: state.selectedStudent
+            };
+
         default:
             return state;
     }

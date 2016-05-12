@@ -94,7 +94,7 @@ function getIcon(status) {
     switch (status) {
         case 'accepted':
             return '✓';
-        case 'half-points':
+        case 'half-accepted':
             return '/';
         case 'pending':
             return '•';
