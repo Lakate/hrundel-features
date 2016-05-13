@@ -101,7 +101,7 @@ function getNewStatus(task, login, fullStatusList) {
     for (let i = 0; i < statussesCount; i++) {
         if (taskStatusList[i].login.toLowerCase() === login.toLowerCase()) {
             if (taskStatusList[i].state !== 'closed') {
-                continue;
+                return 'pending';
             }
             taskStatusList[i].labels.forEach(label => {
                 if (label.name === 'failed') {
