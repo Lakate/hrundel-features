@@ -2,6 +2,7 @@
 
 const Students = require('../models/student');
 const getUserName = require('../../scripts/getGitHubName');
+const updateStatus = require('../../scripts/updateStatus');
 const mongoose = require('mongoose');
 const co = require('co');
 
@@ -9,13 +10,15 @@ exports.refresh = (req, res) => {
     let pullRequests = req.body;
 
     co(function * () {
+        let statusList = yield updateStatus.getStatusses();
+
         for (let i = 0; i < pullRequests.length; i++) {
             yield Students.findStudent({login: pullRequests[i].login})
                 .then(student => {
                     if (student) {
-                        return updateStudent({body: pullRequests[i]}, student);
+                        return updateStudent({body: pullRequests[i]}, student, statusList);
                     } else {
-                        return createStudent({body: pullRequests[i]}, res);
+                        return createStudent({body: pullRequests[i]}, statusList);
                     }
                 });
         }
@@ -29,7 +32,7 @@ exports.getStudent = (req, res) => {
         .then(student => res.json(student));
 };
 
-function createStudent(req) {
+function createStudent(req, statusList) {
     const student = {
         login: req.body.login,
         mentor: req.body.mentor,
@@ -45,10 +48,9 @@ function createStudent(req) {
 
     const newStudent = new Students(student);
     return newStudent.addTask(task)
-        .then(() => newStudent.updateResult())
+        .then(() => newStudent.updateResult(statusList))
         .then(() => {
             getUserName(newStudent, (student, name) => {
-                console.log(student, name);
                 if (name) {
                     student.name = name;
                 } else {
@@ -66,7 +68,7 @@ function createStudent(req) {
         });
 }
 
-function updateStudent(req, student) {
+function updateStudent(req, student, statusList) {
     const task = {
         number: req.body.number,
         taskType: req.body.type,
@@ -89,6 +91,6 @@ function updateStudent(req, student) {
                 return student.addTask(task);
             }
         }).then(() => {
-            return student.updateResult();
+            return student.updateResult(statusList);
         });
 }

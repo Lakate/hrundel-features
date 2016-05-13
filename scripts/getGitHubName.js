@@ -1,4 +1,4 @@
-'use script';
+'use strict';
 
 const request = require('request');
 const GITHUB_API = 'https://api.github.com';
@@ -15,7 +15,6 @@ function getUserName(student, cb) {
                 const user = JSON.parse(body);
                 cb(student, user.name);
             } else {
-                console.error(err);
                 cb(student, '');
             }
         }
