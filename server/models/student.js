@@ -65,6 +65,9 @@ studentsSchema.methods.updateResult = function (statusList) {
     for (let i in this.tasks) {
         let newStatus = getNewStatus(this.tasks[i], this.login, statusList);
         this.tasks[i].status = newStatus || this.tasks[i].status;
+        if (!this.tasks[i].status) {
+            this.tasks[i].status = 'pending';
+        }
         if (this.tasks[i].status === 'accepted') {
             if (this.tasks[i].number === 5 || this.tasks[i].number === 7) {
                 currentResult += 2;
