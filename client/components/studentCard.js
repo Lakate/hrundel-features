@@ -28,7 +28,7 @@ class studentCard extends Component {
         const webdev = this.getTasks();
 
         return (
-            <div className="student-card">
+            <div id="student-card" className="student-card">
                 <div className="student-card__img">
                     <img src={ this.props.selectedStudent.avatar }
                          alt={this.props.selectedStudent.login}
