@@ -59,10 +59,12 @@ studentsSchema.methods.updateTask = function (newTask) {
         });
 };
 
-studentsSchema.methods.updateResult = function () {
+studentsSchema.methods.updateResult = function (statusList) {
     let currentResult = 0;
 
     for (let i in this.tasks) {
+        let newStatus = getNewStatus(this.tasks[i], this.login, statusList);
+        this.tasks[i].status = newStatus || this.tasks[i].status;
         if (this.tasks[i].status === 'accepted') {
             if (this.tasks[i].number === 5 || this.tasks[i].number === 7) {
                 currentResult += 2;
@@ -86,3 +88,46 @@ studentsSchema.methods.updateResult = function () {
 };
 
 module.exports = mongoose.model('Students', studentsSchema);
+
+function getNewStatus(task, login, fullStatusList) {
+    let taskStatusList = fullStatusList[task.number - 1];
+    let statussesCount = taskStatusList.length;
+
+    let currentStatus;
+    let failed = false;
+    let mentorRuntime = false;
+    let studentRuntime = false;
+
+    for (let i = 0; i < statussesCount; i++) {
+        if (taskStatusList[i].login.toLowerCase() === login.toLowerCase()) {
+            if (taskStatusList[i].state !== 'closed') {
+                continue;
+            }
+            taskStatusList[i].labels.forEach(label => {
+                if (label.name === 'failed') {
+                    failed = true;
+                }
+                if (label.name === 'student-time-run-out') {
+                    studentRuntime = true;
+                } else if (label.name === 'mentor-time-run-out') {
+                    mentorRuntime = true;
+                } else {
+                    currentStatus = label.name;
+                }
+            });
+            if (failed) {
+                return;
+            }
+        }
+    }
+
+    if (mentorRuntime && studentRuntime) {
+        currentStatus = 'accepted';
+    } else if (mentorRuntime) {
+        currentStatus = 'accepted';
+    } else if (studentRuntime) {
+        currentStatus = 'half-accepted';
+    }
+
+    return currentStatus;
+}
