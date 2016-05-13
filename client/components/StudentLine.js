@@ -11,6 +11,9 @@ class studentLine extends Component {
     }
 
     handleClick() {
+        $('html, body')
+            .animate({scrollTop: $('#student-card').offset().top}, 1000);
+
         this.props.dispatch(selectStudent(this.props.student));
     }
 
