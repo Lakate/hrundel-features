@@ -48,6 +48,10 @@ function getRepos(cb) {
 function parseDataIssues(data) {
     let labels = [];
 
+    if (!data) {
+        return labels;
+    }
+
     data.forEach(pr => {
         if (pr.event === 'labeled') {
             labels.push({

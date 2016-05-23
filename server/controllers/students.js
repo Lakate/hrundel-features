@@ -4,26 +4,41 @@ const Students = require('../models/student');
 const getUserName = require('../../scripts/getGitHubName');
 const updateStatus = require('../../scripts/updateStatus');
 const mongoose = require('mongoose');
-const co = require('co');
+
+let statusList = [];
 
 exports.refresh = (req, res) => {
-    let pullRequests = req.body;
-
-    co(function * () {
-        let statusList = yield updateStatus.getStatusses();
-
-        for (let i = 0; i < pullRequests.length; i++) {
-            yield Students.findStudent({login: pullRequests[i].login})
-                .then(student => {
-                    if (student) {
-                        return updateStudent({body: pullRequests[i]}, student, statusList);
-                    } else {
-                        return createStudent({body: pullRequests[i]}, statusList);
-                    }
-                });
-        }
-        res.send('OK');
-    });
+    if (statusList.length === 0) {
+        updateStatus.getStatusses()
+            .then(updateStatusses => {
+                statusList = updateStatusses;
+                // очистить через 10 минут
+                setTimeout(() => {
+                    statusList.length = 0;
+                }, 600000);
+            })
+            .then(() => {
+                return Students.findStudent({login: req.body.login})
+                    .then(student => {
+                        if (student) {
+                            return updateStudent(req, student, statusList);
+                        } else {
+                            return createStudent(req, statusList);
+                        }
+                    });
+            })
+            .then(() => res.send('OK'));
+    } else {
+        Students.findStudent({login: req.body.login})
+            .then(student => {
+                if (student) {
+                    return updateStudent(req, student, statusList);
+                } else {
+                    return createStudent(req, statusList);
+                }
+            })
+            .then(() => res.send('OK'));
+    }
 };
 
 exports.getStudent = (req, res) => {
@@ -60,9 +75,6 @@ function createStudent(req, statusList) {
             });
         })
         .then(() => newStudent.save())
-        .then(savedStudent => {
-            return savedStudent;
-        })
         .catch(err => {
             console.error('Error on user save: ' + err);
         });
@@ -90,7 +102,6 @@ function updateStudent(req, student, statusList) {
             } else {
                 return student.addTask(task);
             }
-        }).then(() => {
-            return student.updateResult(statusList);
-        });
+        })
+        .then(() => student.updateResult(statusList));
 }

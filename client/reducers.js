@@ -106,7 +106,7 @@ exports.boardApp = (state = initialState, action) => {
                 filterType: action.filterType,
                 idDesc: action.isDesc,
                 taskCounter: state.taskCounter,
-                selectedStudent: state.selectedStudent
+                selectedStudent: sortedData[0]
             };
         case 'FILTER_MENTOR':
             let filteredByMentor = state.students.filter(student => {

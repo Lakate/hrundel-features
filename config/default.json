@@ -1,6 +1,5 @@
 {
     "db": {
-//        "mongodb_URL": "mongodb://hrundel:hrundelurfu2015@ds045454.mlab.com:45454/board"
-        "mongodb_URL": "mongodb://board-prod:board-prod2016@ds021182.mlab.com:21182/board-prod"
+        "mongodb_URL": "mongodb://hrundel:hrundelurfu2015@ds045454.mlab.com:45454/board"
     }
 }

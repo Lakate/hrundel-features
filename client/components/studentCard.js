@@ -88,8 +88,6 @@ class studentCard extends Component {
                             })
                         }
                     </p>
-                    <hr />
-                    <button onClick={this.getPRData}>1:✓</button>
                 </div>
             </div>
         );
