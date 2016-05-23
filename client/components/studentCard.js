@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {fetchPRData} from '../actions';
 
 const GITHUB = "http://github.com/";
 const GH_URFU = "http://github.com/urfu-2015/";
@@ -8,11 +7,6 @@ class studentCard extends Component {
     constructor(props) {
         super(props);
         this.getTasks = this.getTasks.bind(this);
-        this.getPRData = this.getPRData.bind(this);
-    }
-
-    getPRData() {
-        this.props.dispatch(fetchPRData({task: 'task'}));
     }
 
     getTasks() {

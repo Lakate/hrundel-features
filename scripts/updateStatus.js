@@ -19,11 +19,16 @@ let github = new GitHubApi({
     }
 });
 
-const token = process.env.TOKEN;
 github.authenticate({
-    type: "token",
-    token
+    type: "basic",
+    username: "lakate",
+    password: "87051021004Aa"
 });
+// const token = process.env.TOKEN;
+// github.authenticate({
+//     type: "token",
+//     token
+// });
 
 function parseReposList(list) {
     let reposList = list.filter(repo => {
