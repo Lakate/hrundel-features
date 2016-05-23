@@ -59,7 +59,7 @@ studentsSchema.methods.updateTask = function (newTask) {
         });
 };
 
-studentsSchema.methods.updateResult = function (statusList) {
+studentsSchema.methods.updateResult = function () {
     let currentResult = 0;
 
     for (let i in this.tasks) {

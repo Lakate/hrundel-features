@@ -14,6 +14,8 @@ router.get('/', (req, res) => {
 });
 router.post('/refresh', students.refresh);
 
+router.post('/pr/:id', students.getPRData);
+
 router.get('/:id', students.getStudent);
 
 module.exports = router;
