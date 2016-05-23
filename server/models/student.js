@@ -23,25 +23,19 @@ const studentsSchema = new Schema({
 
 studentsSchema.statics.findAllStudents = function () {
     return this.find({})
-        .then(students => {
-            return students;
-        });
+        .then(students => students);
 };
 
 studentsSchema.statics.findStudent = function (query) {
     return this.findOne(query)
-        .then(student => {
-            return student;
-        });
+        .then(student => student);
 };
 
 studentsSchema.methods.addTask = function (newTask) {
     this.tasks.push(newTask);
 
     return this.save()
-        .then(savedStudent => {
-            return savedStudent;
-        });
+        .then(savedStudent => savedStudent);
 };
 
 studentsSchema.methods.updateTask = function (newTask) {
@@ -54,9 +48,7 @@ studentsSchema.methods.updateTask = function (newTask) {
     }
 
     return this.save()
-        .then(savedStudent => {
-            return savedStudent;
-        });
+        .then(savedStudent => savedStudent);
 };
 
 studentsSchema.methods.updateResult = function (statusList) {
@@ -65,7 +57,7 @@ studentsSchema.methods.updateResult = function (statusList) {
     for (let i in this.tasks) {
         let newStatus = getNewStatus(this.tasks[i], this.login, statusList);
         this.tasks[i].status = newStatus || this.tasks[i].status;
-        if (!this.tasks[i].status) {
+        if (this.tasks[i].status === null) {
             this.tasks[i].status = 'pending';
         }
         if (this.tasks[i].status === 'accepted') {
@@ -85,9 +77,7 @@ studentsSchema.methods.updateResult = function (statusList) {
 
     this.result = currentResult;
     return this.save()
-        .then(savedStudent => {
-            return savedStudent;
-        });
+        .then(savedStudent => savedStudent);
 };
 
 module.exports = mongoose.model('Students', studentsSchema);

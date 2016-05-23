@@ -3,16 +3,12 @@ import Header from './header';
 import Search from './search';
 import StudentTable from './studentTable';
 import StudentCard from './studentCard';
-import {refreshStudent, selectStudent, filterStudents} from '../actions';
+import {refreshStudent, filterStudents} from '../actions';
 
 const content = React.createClass({
     componentWillMount: function () {
         fetch('/students')
             .then(response => response.json())
-            .then(data => {
-                this.props.store.dispatch(selectStudent(data.students[0]));
-                return data;
-            })
             .then(data => {
                 data.students.forEach(student => {
                     this.props.store.dispatch(refreshStudent(student));

@@ -16,6 +16,8 @@
   "extends": ["xo"],
   "rules": {
     "indent": [2, 4, {"SwitchCase": 1}],
+    "camelcase": 0,
+    "no-loop-func": 0,
     "max-len": [2, 100],
     "max-params": [2, 3],
     "no-lonely-if": 0,
