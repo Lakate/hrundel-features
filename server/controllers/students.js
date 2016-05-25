@@ -3,6 +3,7 @@
 const Students = require('../models/student');
 const getUserName = require('../../scripts/getGitHubName');
 const updateStatus = require('../../scripts/updateStatus');
+const commentsAndCommits = require('../../scripts/commentsAndCommits');
 const mongoose = require('mongoose');
 
 let statusList = [];
@@ -58,12 +59,22 @@ function createStudent(req, statusList) {
         taskType: req.body.type,
         mentor: req.body.mentor,
         status: req.body.status,
-        pr: req.body.pr
+        pr: req.body.pr,
+        commentsAndCommits: []
     };
 
     const newStudent = new Students(student);
-    return newStudent.addTask(task)
+    return commentsAndCommits.getCommentsAndCommits(task.taskType + '-tasks-' + task.number,
+        task.pr, student.login)
+        .then(commentsAndCommits => {
+            task.commentsAndCommits = commentsAndCommits;
+            newStudent.addTask(task);
+        })
         .then(() => newStudent.updateResult(statusList))
+        .then(commentsAndCommits => {
+            newStudent.commentsAndCommits = commentsAndCommits;
+            newStudent.save();
+        })
         .then(() => {
             getUserName(newStudent, (student, name) => {
                 if (name) {
@@ -94,11 +105,22 @@ function updateStudent(req, student, statusList) {
         'login': req.body.login
     };
 
+    let isfoundStudent = false;
     return Students.findStudent(query)
         .then(foundStudent => {
             if (foundStudent) {
                 student = foundStudent;
-                return foundStudent.updateTask(task);
+                isfoundStudent = true;
+            }
+        })
+        .then(() => {
+            return commentsAndCommits.getCommentsAndCommits(task.taskType + '-tasks-' + task.number,
+                task.pr, student.login);
+        })
+        .then(commentsAndCommits => {
+            task.commentsAndCommits = commentsAndCommits;
+            if (isfoundStudent) {
+                return student.updateTask(task);
             } else {
                 return student.addTask(task);
             }
