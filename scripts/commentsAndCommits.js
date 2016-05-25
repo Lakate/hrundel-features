@@ -125,5 +125,3 @@ module.exports.getCommentsAndCommits = (repo, pr, student) => {
     return Promise.all([getIssueComments(repo, pr, student), getIssueCommits(repo, pr)])
         .then(data => sortData(data[0].concat(data[1])));
 };
-
-// module.exports.getCommentsAndCommits('webdev-tasks-5', 22, 'lakate');
