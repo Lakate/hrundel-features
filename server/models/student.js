@@ -8,7 +8,8 @@ const Tasks = new Schema({
     number: Number,
     mentor: String,
     status: String,
-    pr: Number
+    pr: Number,
+    commentsAndCommits: []
 });
 
 const studentsSchema = new Schema({
@@ -44,6 +45,7 @@ studentsSchema.methods.updateTask = function (newTask) {
             this.tasks[i].number === newTask.number) {
             this.tasks[i].status = newTask.status;
             this.tasks[i].mentor = newTask.mentor;
+            this.tasks[i].commentsAndCommits = newTask.commentsAndCommits;
         }
     }
 
