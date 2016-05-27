@@ -7,6 +7,8 @@ const PAGE_LIST = 2;
 const async = require('async');
 const Promise = require('bluebird');
 
+const gitHubAuth = require('./gitHubAuth');
+
 let github = new GitHubApi({
     version: "3.0.0",
     debug: true,
@@ -19,11 +21,7 @@ let github = new GitHubApi({
     }
 });
 
-const token = process.env.TOKEN;
-github.authenticate({
-    type: "token",
-    token
-});
+gitHubAuth.auth(github);
 
 function parseReposList(list) {
     let reposList = list.filter(repo => {
