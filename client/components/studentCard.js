@@ -61,26 +61,43 @@ class studentCard extends Component {
                     <hr />
                     <p>
                         <span className="student-card-data_bold">Webdev:</span>
-                        {
-                            webdev.map(task => {
-                                if (task.pr) {
-                                    const href = GH_URFU +
-                                        `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
-                                    return (
-                                        <a className="student-card-data__links"
-                                           href={href} target="_blank">
-                                            {getIcon(task.status)}
-                                        </a>
-                                    );
-                                } else {
-                                    return (
-                                        <span className="student-card-data__span">
-                                            {getIcon(task.status)}
-                                        </span>
-                                    );
-                                }
-                            })
-                        }
+                        <div className="student-card-data__problems-box">
+                            {
+                                webdev.map(task => {
+                                    if (task.pr) {
+                                        const href = GH_URFU +
+                                            `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
+                                        return (
+                                            <div className="student-card-data__problem">
+                                                <a className="student-card-data__links"
+                                                   href={href} target="_blank">
+                                                    {getIcon(task.status)}
+                                                </a>
+                                                <button type="button" 
+                                                        className="btn btn-default btn-xs">
+                                                    <span className="glyphicon glyphicon-stats"
+                                                          aria-hidden="true"></span>
+                                                </button>
+                                            </div>
+                                        );
+                                    } else {
+                                        return (
+                                            <div className="student-card-data__problem">
+                                                <span className="student-card-data__span">
+                                                    {getIcon(task.status)}
+                                                </span>
+                                                <button type="button" 
+                                                        className="btn btn-default btn-xs"
+                                                        disabled>
+                                                    <span className="glyphicon glyphicon-stats"
+                                                          aria-hidden="true"></span>
+                                                </button>
+                                            </div>
+                                        );
+                                    }
+                                })
+                            }
+                        </div>
                     </p>
                 </div>
             </div>

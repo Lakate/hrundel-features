@@ -67,3 +67,20 @@
     border-radius: 5px;
     margin: 5px;
 }
+
+.student-card-data__problems-box
+{
+    display: flex;
+    justify-content: space-around;
+}
+
+.student-card-data__problem
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-default
+{
+    background-image: none !important;
+}
