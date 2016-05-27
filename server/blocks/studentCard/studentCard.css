@@ -59,6 +59,7 @@
 .student-card-data_bold
 {
     font-weight: 800;
+    margin: 0 !important;
 }
 
 .student-line__avatar
@@ -72,15 +73,11 @@
 {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 10px;
 }
 
 .student-card-data__problem
 {
     display: flex;
     flex-direction: column;
-}
-
-.btn-default
-{
-    background-image: none !important;
 }
