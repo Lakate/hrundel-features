@@ -14,7 +14,6 @@ class problemModal extends Component {
     }
 
     handleOpen() {
-        console.log("ASDFGHJ");
         this.setState({showModal: true});
     }
 
