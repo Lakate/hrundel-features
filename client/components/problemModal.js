@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Modal, Glyphicon} from 'react-bootstrap';
+import {getCommitsAndComments} from '../actions';
 
 class problemModal extends Component {
     constructor(props) {
@@ -14,6 +15,7 @@ class problemModal extends Component {
     }
 
     handleOpen() {
+        this.props.dispatch(getCommitsAndComments(this.props.task, this.props.student));
         this.setState({showModal: true});
     }
 
@@ -26,6 +28,7 @@ class problemModal extends Component {
                 </Button>
             );
         } else {
+            const taskName = `${this.props.task.taskType}-tasks-${this.props.task.number}`;
             return (
                 <div>
                     <Button className="btn-default"
@@ -34,7 +37,7 @@ class problemModal extends Component {
                     </Button>
                     <Modal show={this.state.showModal} onHide={this.handleClose}>
                         <Modal.Header closeButton>
-                            <Modal.Title>Modal heading</Modal.Title>
+                            <Modal.Title>{taskName}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                         </Modal.Body>

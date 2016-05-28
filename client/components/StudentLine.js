@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {selectStudent, filterMentor} from '../actions';
 
-const GITHUB = "http://github.com/";
-const GH_AVATAR = "https://avatars.githubusercontent.com/";
+const GITHUB = 'http://github.com/';
+const GH_AVATAR = 'https://avatars.githubusercontent.com/';
 
 class studentLine extends Component {
     constructor(props) {

@@ -13,6 +13,7 @@ router.get('/', (req, res) => {
         });
 });
 router.post('/refresh', students.refresh);
+router.put('/getCommentsAndCommits', students.getCommentsAndCommits);
 
 router.get('/:id', students.getStudent);
 

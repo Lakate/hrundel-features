@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import ProblemModal from './problemModal';
 
-const GITHUB = "http://github.com/";
-const GH_URFU = "http://github.com/urfu-2015/";
+const GITHUB = 'http://github.com/';
+const GH_URFU = 'http://github.com/urfu-2015/';
 
 class studentCard extends Component {
     constructor(props) {
@@ -75,7 +75,9 @@ class studentCard extends Component {
                                                    href={href} target="_blank">
                                                     {getIcon(task.status)}
                                                 </a>
-                                                <ProblemModal disabled={disabled} />
+                                                <ProblemModal disabled={disabled} task={task}
+                                                    student={this.props.selectedStudent.login}
+                                                    dispatch={this.props.dispatch} />
                                             </div>
                                         );
                                     } else {
