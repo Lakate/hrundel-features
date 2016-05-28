@@ -46,6 +46,11 @@ function parseCommits(data, student) {
     };
 }
 
+function getPagesCount(links) {
+    let pagesNumber = links.match(/(page=[\w+]*&)/g);
+    return pagesNumber[1].match(/(\d+)/)[0];
+}
+
 function getIssueCommentsFromGH(repo, number, callback) {
     github.issues.getComments({
         user: ORGANIZATION,
@@ -54,6 +59,13 @@ function getIssueCommentsFromGH(repo, number, callback) {
         page: 1,
         per_page: 100
     }, function (err, res) {
+        if (!res.meta.link) {
+            callback(err, res);
+            return;
+        }
+
+        let pageCount = getPagesCount(res.meta.link);
+        let functions = setBindingFunction(parseInt(pageCount, 10), repo);
         callback(err, res);
     });
 }
