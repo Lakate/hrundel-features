@@ -1,7 +1,7 @@
 'use strict';
 
 const ORGANIZATION = 'urfu-2015';
-const GitHubApi = require("github");
+const GitHubApi = require('github');
 const PAGE_LIST = 2;
 
 const async = require('async');
@@ -10,14 +10,14 @@ const Promise = require('bluebird');
 const gitHubAuth = require('./gitHubAuth');
 
 let github = new GitHubApi({
-    version: "3.0.0",
+    version: '3.0.0',
     debug: true,
-    protocol: "https",
-    host: "api.github.com",
+    protocol: 'https',
+    host: 'api.github.com',
     timeout: 5000,
     headers: {
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 " +
-            "KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36"
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 ' +
+            'KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'
     }
 });
 

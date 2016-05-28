@@ -40,10 +40,10 @@ describe('Student model testing', function () {
 
     it('should add task to student', function (done) {
         const task = {
-            mentor: "Mokhov",
+            mentor: 'Mokhov',
             number: 1,
-            taskType: "webdev",
-            status: "pending"
+            taskType: 'webdev',
+            status: 'pending'
         };
 
         Student.findStudent({login: 'Lakate'})
@@ -63,9 +63,9 @@ describe('Student model testing', function () {
     it('should update student task', function (done) {
         const task = {
             number: 1,
-            taskType: "webdev",
-            mentor: "i4got10",
-            status: "accepted"
+            taskType: 'webdev',
+            mentor: 'i4got10',
+            status: 'accepted'
         };
 
         Student.findStudent({'tasks.taskType': 'webdev', 'tasks.number': 1, 'login': 'Lakate'})

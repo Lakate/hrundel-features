@@ -16,54 +16,54 @@ const students = ['Lakate', 'danmir', 'Savichev-Igor', 'dotokoto'];
 const mentors = ['Zhigalov', 'Mokhov', 'gogoleff', 'xiiivii'];
 
 const taskType1 = [{
-    mentor: "Zhigalov",
+    mentor: 'Zhigalov',
     number: 1,
-    taskType: "webdev",
-    status: "pending",
+    taskType: 'webdev',
+    status: 'pending',
     pr: 1
 }, {
-    mentor: "Mokhov",
+    mentor: 'Mokhov',
     number: 3,
-    taskType: "webdev",
-    status: "accepted",
+    taskType: 'webdev',
+    status: 'accepted',
     pr: 2
 }, {
-    mentor: "gogoleff",
+    mentor: 'gogoleff',
     number: 4,
-    taskType: "webdev",
-    status: "accepted",
+    taskType: 'webdev',
+    status: 'accepted',
     pr: 1
 }, {
-    mentor: "xiiivii",
+    mentor: 'xiiivii',
     number: 2,
-    taskType: "webdev",
-    status: "pending",
+    taskType: 'webdev',
+    status: 'pending',
     pr: 1
 }, {
-    mentor: "xiiivii",
+    mentor: 'xiiivii',
     number: 5,
-    taskType: "webdev",
-    status: "half-points",
+    taskType: 'webdev',
+    status: 'half-points',
     pr: 1
 }];
 
 const taskType2 = [{
-    mentor: "Zhigalov",
+    mentor: 'Zhigalov',
     number: 1,
-    taskType: "webdev",
-    status: "pending",
+    taskType: 'webdev',
+    status: 'pending',
     pr: 1
 }, {
-    mentor: "Mokhov",
+    mentor: 'Mokhov',
     number: 3,
-    taskType: "webdev",
-    status: "accepted",
+    taskType: 'webdev',
+    status: 'accepted',
     pr: 1
 }, {
-    mentor: "Zhigalov",
+    mentor: 'Zhigalov',
     number: 4,
-    taskType: "webdev",
-    status: "half-points",
+    taskType: 'webdev',
+    status: 'half-points',
     pr: 1
 }];
 
@@ -71,7 +71,7 @@ for (let i = 0; i < students.length; i++) {
     let student = new Student({
         login: students[i],
         mentor: mentors[i],
-        avatar: "https://avatars.githubusercontent.com/" + students[i]
+        avatar: 'https://avatars.githubusercontent.com/' + students[i]
     });
 
     if (i % 2 === 0) {

@@ -33,3 +33,25 @@ export const filterMentor = mentor => {
         mentor
     };
 };
+
+export function getCommitsAndComments(task, login) {
+    return dispatch => {
+        return fetch('/students/getCommentsAndCommits', {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                number: task.number,
+                type: task.taskType,
+                mentor: task.mentor,
+                status: task.status,
+                pr: task.pr,
+                commentsAndCommits: task.commentsAndCommits,
+                login
+            })
+        })
+            .then(response => response.json())
+            .then(student => dispatch(refreshStudent(student)));
+    };
+}

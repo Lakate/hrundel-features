@@ -33,7 +33,8 @@ const content = React.createClass({
                     <span>•</span> – проверяется,
                     <span>✗</span> – 0 баллов
                 </p>
-                <StudentCard selectedStudent={selectedStudent} taskCounter={taskCounter} />
+                <StudentCard selectedStudent={selectedStudent} taskCounter={taskCounter}
+                             dispatch={this.props.store.dispatch}/>
                 <StudentTable students={students} findMentor={findMentor}
                               filteredStudents={filteredStudents}
                               dispatch={this.props.store.dispatch}/>

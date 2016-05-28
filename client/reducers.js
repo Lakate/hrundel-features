@@ -14,14 +14,16 @@ exports.boardApp = (state = initialState, action) => {
         case 'REFRESH_STUDENT':
             return {
                 students: (() => {
+                    let refreshStudent = false;
                     let newStudents = state.students.map(student => {
                         if (student._id === action.student._id) {
+                            refreshStudent = true;
                             return action.student;
                         }
                         return student;
                     });
 
-                    if (!(action.student in newStudents)) {
+                    if (!refreshStudent) {
                         return newStudents.concat([action.student]);
                     }
                     return newStudents;

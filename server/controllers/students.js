@@ -48,6 +48,11 @@ exports.getStudent = (req, res) => {
         .then(student => res.json(student));
 };
 
+exports.getCommentsAndCommits = (req, res) => {
+    updateStudent(req)
+        .then(student => res.json(student));
+};
+
 function createStudent(req, statusList) {
     const student = {
         login: req.body.login,
@@ -125,5 +130,11 @@ function updateStudent(req, student, statusList) {
                 return student.addTask(task);
             }
         })
-        .then(() => student.updateResult(statusList));
+        .then(savedStudent => {
+            if (statusList) {
+                return student.updateResult(statusList);
+            } else {
+                return savedStudent;
+            }
+        });
 }
