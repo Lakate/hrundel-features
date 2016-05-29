@@ -28,7 +28,7 @@ function parseReposList(list) {
         return repo.name.includes('webdev-tasks');
     });
     reposList = reposList.map(repo => {
-        return repo.name;
+        return {name: repo.name, createAt: repo.created_at };
     });
 
     return reposList;
@@ -125,7 +125,7 @@ function getInitialDataFromIssues(repo, callback) {
 
 function getStatusFromRepo(reposList, cb) {
     let functions = reposList.map(repo => {
-        return getInitialDataFromIssues.bind(null, repo);
+        return getInitialDataFromIssues.bind(null, repo.name);
     });
 
     async.parallel(functions, (err, body) => {
@@ -137,7 +137,12 @@ module.exports.getStatusses = () => {
     let getReposFromGH = Promise.promisify(getRepos);
     let getStatussesFromGH = Promise.promisify(getStatusFromRepo);
 
+    let repos = [];
+
     return getReposFromGH()
-            .then(reposList => getStatussesFromGH(reposList))
-            .then(statusList => statusList);
+            .then(reposList => {
+                repos = reposList;
+                return getStatussesFromGH(reposList);
+            })
+            .then(updateStatusses => [repos, updateStatusses]);
 };

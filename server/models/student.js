@@ -9,7 +9,8 @@ const Tasks = new Schema({
     mentor: String,
     status: String,
     pr: Number,
-    commentsAndCommits: []
+    commentsAndCommits: [],
+    startDate: String
 });
 
 const studentsSchema = new Schema({

@@ -7,15 +7,17 @@ const commentsAndCommits = require('../../scripts/commentsAndCommits');
 const mongoose = require('mongoose');
 
 let statusList = [];
+let repos = [];
 
 exports.refresh = (req, res) => {
     if (statusList.length === 0) {
         updateStatus.getStatusses()
-            .then(updateStatusses => {
-                statusList = updateStatusses;
+            .then(data => {
+                repos = data[0];
+                statusList = data[1];
                 // очистить через 10 минут
                 setTimeout(() => {
-                    statusList.length = 0;
+                    statusList = [];
                 }, 600000);
             })
             .then(() => {
@@ -53,6 +55,15 @@ exports.getCommentsAndCommits = (req, res) => {
         .then(student => res.json(student));
 };
 
+function getStartDate(taskName) {
+    let length = repos.length;
+    for (let i = 0; i < length; i++) {
+        if (taskName === repos[i].name) {
+            return repos[i].createAt;
+        }
+    }
+}
+
 function createStudent(req, statusList) {
     const student = {
         login: req.body.login,
@@ -65,7 +76,8 @@ function createStudent(req, statusList) {
         mentor: req.body.mentor,
         status: req.body.status,
         pr: req.body.pr,
-        commentsAndCommits: []
+        commentsAndCommits: [],
+        startDate: getStartDate(req.body.type + '-tasks-' + req.body.number)
     };
 
     const newStudent = new Students(student);
@@ -102,8 +114,10 @@ function updateStudent(req, student, statusList) {
         taskType: req.body.type,
         mentor: req.body.mentor,
         status: req.body.status,
-        pr: req.body.pr
+        pr: req.body.pr,
+        startDate: getStartDate(req.body.type + '-tasks-' + req.body.number)
     };
+    console.log(task, '___________________________________');
     const query = {
         'tasks.taskType': req.body.type,
         'tasks.number': req.body.number,
