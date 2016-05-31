@@ -3,3 +3,21 @@
     background-image: none !important;
     outline: none;
 }
+
+.cool
+{
+    border: 1px solid red;
+}
+
+.problem-modal
+{
+    display: block;
+}
+
+@media (max-width: 400px)
+{
+    .problem-modal
+    {
+        display: none !important;
+    }
+}

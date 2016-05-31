@@ -4,6 +4,7 @@
 @import "../../blocks/studentTable/studentTable.css";
 @import "../../blocks/search/search.css";
 @import "../../blocks/problemModal/problemModal.css";
+@import "../../blocks/axis/axis.css";
 @import url(https://fonts.googleapis.com/css?family=Roboto);
 
 #root

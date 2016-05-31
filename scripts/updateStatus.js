@@ -28,7 +28,7 @@ function parseReposList(list) {
         return repo.name.includes('webdev-tasks');
     });
     reposList = reposList.map(repo => {
-        return {name: repo.name, createAt: repo.created_at };
+        return {name: repo.name, createAt: repo.created_at};
     });
 
     return reposList;

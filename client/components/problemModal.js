@@ -1,13 +1,26 @@
 import React, {Component} from 'react';
 import {Button, Modal, Glyphicon} from 'react-bootstrap';
 import {getCommitsAndComments} from '../actions';
+import d3 from 'd3';
+import XYAxis from './x-y-axis';
 
 class problemModal extends Component {
     constructor(props) {
         super(props);
         this.state = {showModal: false};
+        this.getSize = this.getSize.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
+    }
+
+    getSize() {
+        if (document.body.clientWidth > 767) {
+            // ширина modal - padding-15
+            return 600 - 30;
+        } else {
+            // width - margin=10 - padding=15
+            return document.body.clientWidth - 20 - 30;
+        }
     }
 
     handleClose() {
@@ -15,22 +28,29 @@ class problemModal extends Component {
     }
 
     handleOpen() {
-        this.props.dispatch(getCommitsAndComments(this.props.task, this.props.student));
+        // this.props.dispatch(getCommitsAndComments(this.props.task, this.props.student));
         this.setState({showModal: true});
     }
 
     render() {
         if (this.props.disabled) {
             return (
-                <Button className="btn-default"
+                <Button className="btn-default problem-modal"
                         bsSize="xsmall" disabled>
                     <Glyphicon glyph="stats" />
                 </Button>
             );
         } else {
             const taskName = `${this.props.task.taskType}-tasks-${this.props.task.number}`;
+            const styles = {
+                width: this.getSize() || 500,
+                height: 300,
+                padding: 20
+            };
+            const scales = {xScale: xScale(styles, this.props.task.commentsAndCommits),
+                yScale: yScale(styles, this.props.student, this.props.task.mentor)};
             return (
-                <div>
+                <div className="problem-modal">
                     <Button className="btn-default"
                             bsSize="xsmall" onClick={this.handleOpen}>
                         <Glyphicon glyph="stats" />
@@ -40,6 +60,9 @@ class problemModal extends Component {
                             <Modal.Title>{taskName}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
+                            <svg className="cool" width="100%" height="300px">
+                                <XYAxis {...styles} {...scales} />
+                            </svg>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button onClick={this.handleClose}>Close</Button>
@@ -52,3 +75,22 @@ class problemModal extends Component {
 }
 
 export default problemModal;
+
+// Returns a function that "scales" X coordinates from the data to fit the chart
+const xScale = (props, commentsAndCommits) => {
+    return d3.time.scale()
+        .domain(
+            d3.extent(commentsAndCommits, function (d) {
+                console.log(d.createdAt);
+                return new Date(d.createdAt);
+            })
+        )
+        .range([props.padding, props.width - props.padding * 2]);
+};
+
+// Returns a function that "scales" Y coordinates from the data to fit the chart
+const yScale = (props, student, mentor) => {
+    return d3.scale.ordinal()
+        .rangeRoundBands([props.height - props.padding, props.padding])
+        .domain([student, mentor]);
+};

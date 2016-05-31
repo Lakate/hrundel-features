@@ -117,7 +117,6 @@ function updateStudent(req, student, statusList) {
         pr: req.body.pr,
         startDate: getStartDate(req.body.type + '-tasks-' + req.body.number)
     };
-    console.log(task, '___________________________________');
     const query = {
         'tasks.taskType': req.body.type,
         'tasks.number': req.body.number,
