@@ -3,6 +3,7 @@ import {Button, Modal, Glyphicon} from 'react-bootstrap';
 import {getCommitsAndComments} from '../actions';
 import d3 from 'd3';
 import XYAxis from './x-y-axis';
+import Flags from './flags';
 
 class problemModal extends Component {
     constructor(props) {
@@ -62,6 +63,9 @@ class problemModal extends Component {
                         <Modal.Body>
                             <svg className="cool" width="100%" height="300px">
                                 <XYAxis {...styles} {...scales} />
+                                <Flags {...styles}
+                                    commentsAndCommit={this.props.task.commentsAndCommits}
+                                    yScale={[this.props.student, this.props.task.mentor]} />
                             </svg>
                         </Modal.Body>
                         <Modal.Footer>
@@ -78,19 +82,21 @@ export default problemModal;
 
 // Returns a function that "scales" X coordinates from the data to fit the chart
 const xScale = (props, commentsAndCommits) => {
+    let xValues = d3.set(commentsAndCommits.map(function (d) {
+        let date = new Date(d.createdAt);
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    })).values();
+
     return d3.time.scale()
-        .domain(
-            d3.extent(commentsAndCommits, function (d) {
-                console.log(d.createdAt);
-                return new Date(d.createdAt);
-            })
-        )
+        .domain(d3.extent(xValues, function (d) {
+            return new Date(d);
+        }))
         .range([props.padding, props.width - props.padding * 2]);
 };
 
 // Returns a function that "scales" Y coordinates from the data to fit the chart
 const yScale = (props, student, mentor) => {
     return d3.scale.ordinal()
-        .rangeRoundBands([props.height - props.padding, props.padding])
+        .rangePoints([props.height - props.padding, props.padding])
         .domain([student, mentor]);
 };

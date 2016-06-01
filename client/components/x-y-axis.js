@@ -23,8 +23,11 @@ export default props => {
         dx: '0',
         textAnchor: 'middle'
     };
-    return <g className="xy-axis">
-        <Axis {...xSettings}/>
-        <Axis {...ySettings}/>
-    </g>;
+
+    return (
+        <g className="xy-axis">
+            <Axis {...xSettings}/>
+            <Axis {...ySettings}/>
+        </g>
+    );
 };

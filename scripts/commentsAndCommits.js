@@ -37,9 +37,9 @@ function parseComment(comment) {
     };
 }
 
-function parseCommits(data) {
+function parseCommits(data, student) {
     return {
-        user: data.commit.author.name,
+        user: student,
         body: data.commit.message,
         createdAt: data.commit.author.date,
         createdAtMS: Date.parse(data.commit.author.date)
@@ -108,10 +108,11 @@ function sortData(story) {
     return story.sort(sortByCreatedAt);
 }
 
-function getCommits(repo, pr, cb) {
+/* eslint max-params: [2, 4] */
+function getCommits(repo, pr, student, cb) {
     let getIssueCommits = Promise.promisify(getIssueCommitsFromGH);
     getIssueCommits(repo, pr)
-        .then(commits => commits.map(commit => parseCommits(commit)))
+        .then(commits => commits.map(commit => parseCommits(commit, student)))
         .then(data => cb(null, data));
 }
 
@@ -119,6 +120,6 @@ module.exports.getCommentsAndCommits = (repo, pr, student) => {
     let getIssueComments = Promise.promisify(getComments);
     let getIssueCommits = Promise.promisify(getCommits);
 
-    return Promise.all([getIssueComments(repo, pr, student), getIssueCommits(repo, pr)])
+    return Promise.all([getIssueComments(repo, pr, student), getIssueCommits(repo, pr, student)])
         .then(data => sortData(data[0].concat(data[1])));
 };
