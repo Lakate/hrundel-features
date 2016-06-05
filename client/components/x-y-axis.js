@@ -2,7 +2,6 @@ import React from 'react';
 import Axis from './axis';
 
 export default props => {
-    console.log(Math.max(props.ticksCount, 14), props.ticksCount);
     const xSettings = {
         translate: `translate(${props.padding}, ${props.height / 2})`,
         scale: props.xScale,

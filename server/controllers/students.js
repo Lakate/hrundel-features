@@ -81,8 +81,7 @@ function createStudent(req, statusList) {
     };
 
     const newStudent = new Students(student);
-    return commentsAndCommits.getCommentsAndCommits(task.taskType + '-tasks-' + task.number,
-        task.pr, student.login)
+    return commentsAndCommits.getCommentsAndCommits(task, student.login)
         .then(commentsAndCommits => {
             task.commentsAndCommits = commentsAndCommits;
             newStudent.addTask(task);
@@ -132,8 +131,7 @@ function updateStudent(req, student, statusList) {
             }
         })
         .then(() => {
-            return commentsAndCommits.getCommentsAndCommits(task.taskType + '-tasks-' + task.number,
-                task.pr, student.login);
+            return commentsAndCommits.getCommentsAndCommits(task, student.login);
         })
         .then(commentsAndCommits => {
             task.commentsAndCommits = commentsAndCommits;

@@ -10,19 +10,21 @@ export default class Deadlines extends React.Component {
 
     componentDidMount() {
         let tooltip = d3.select('.tooltip');
-        let startDeadline = this.props.startDeadline;
 
-        d3.select('.cool')
-            .selectAll('.start-deadline')
+        d3.select('.graph')
+            .selectAll('.deadline')
             .on('mouseover', function () {
+                let selectedThis = d3.select(this);
+
                 tooltip.transition()
                     .duration(200)
                     .style('opacity', 0.9);
                 tooltip.html('<div class=\'tooltip-data\'>' +
-                    (d3.select(this).attr('data-info')) + '</div>' +
-                    '<div>' + startDeadline.replace(/[A-Z]/g, ' ') + '</div>')
-                    .style('left', (d3.select(this).attr('data-cx') - 90) + 'px')
-                    .style('top', (d3.select(this).attr('data-cy') - 30) + 'px');
+                    (selectedThis.attr('data-info')) + '</div>' +
+                    '<div>' + selectedThis.attr('data-date').replace(/[A-Z]/g, ' ')
+                        .replace(/\..+/g, ' ') + '</div>')
+                    .style('left', (selectedThis.attr('data-cx') - 90) + 'px')
+                    .style('top', (selectedThis.attr('data-cy') - 30) + 'px');
             })
             .on('mouseout', function () {
                 tooltip.transition()
@@ -41,18 +43,26 @@ export default class Deadlines extends React.Component {
         date.setDate(date.getDate() + 7);
         return date;
     }
-
     render() {
         let startDeadline = this.getStartDeadline(this.props.startDeadline);
-        let {cx, cy} = this.getCoords(startDeadline);
-        let startDeadlinePath = `M ${cx},${cy} L${cx},${cy - 20} 
-                L${cx + 7},${cy - 15} L${cx},${cy - 10}`;
+        let start = this.getCoords(startDeadline);
+        let finish = this.getCoords(this.props.finishDeadline);
+
+        let startDeadlinePath = `M ${start.cx},${start.cy} L${start.cx},${start.cy - 20} 
+                L${start.cx + 7},${start.cy - 15} L${start.cx},${start.cy - 10}`;
+        let finishDeadlinePath = `M ${finish.cx},${finish.cy} L${finish.cx},${finish.cy - 20} 
+                L${finish.cx + 7},${finish.cy - 15} L${finish.cx},${finish.cy - 10}`;
 
         return (
             <g>
-                <path className="start-deadline" d={startDeadlinePath} data-cx={cx} data-cy={cy}
-                      data-info="start deadline"
+                <path className="deadline" d={startDeadlinePath} data-cx={start.cx}
+                      data-cy={start.cy} data-info="start deadline"
+                      data-date={this.props.startDeadline}
                       fill="red" stroke-width="3" stroke="red"/>
+                <path className="deadline" d={finishDeadlinePath} data-cx={finish.cx}
+                      data-cy={finish.cy} data-info="finish deadline"
+                      data-date={(new Date(this.props.finishDeadline)).toISOString()}
+                      fill="green" stroke-width="3" stroke="green"/>
             </g>
         );
     }

@@ -5,11 +5,16 @@ import StatsLine from './statsLine';
 import Deadlines from './deadlines';
 
 let xValues;
+let currentDeadline;
+
+const TWOWEEKMS = 14 * 24 * 60 * 60 * 1000;
+const THREEWEEKMS = 21 * 24 * 60 * 60 * 1000;
 
 class Graph extends Component {
     constructor(props) {
         super(props);
         this.getSize = this.getSize.bind(this);
+        this.getDeadline = this.getDeadline.bind(this);
     }
 
     getSize() {
@@ -22,7 +27,38 @@ class Graph extends Component {
         }
     }
 
+    getDeadline() {
+        let currentDate = Date.parse(this.props.task.startDate);
+
+        let time = {};
+        let last = this.props.task.commentsAndCommits.length - 1;
+
+        this.props.task.commentsAndCommits.forEach(commentOrCommit => {
+            if (time[commentOrCommit.user]) {
+                time[commentOrCommit.user] += Date.parse(commentOrCommit.createdAt) - currentDate;
+            } else {
+                time[commentOrCommit.user] = Date.parse(commentOrCommit.createdAt) - currentDate;
+            }
+            currentDate = Date.parse(commentOrCommit.createdAt);
+        });
+
+        let taskCountDays;
+        if (this.props.task.number === 5 || this.props.task.number === 7) {
+            taskCountDays = THREEWEEKMS;
+        } else {
+            taskCountDays = TWOWEEKMS;
+        }
+        for (let user in time) {
+            if (user !== this.props.task.commentsAndCommits[last].user) {
+                return new Date(Date.parse(this.props.task.commentsAndCommits[last].createdAt) +
+                    (taskCountDays - time[user]));
+            }
+        }
+    }
+
     render() {
+        currentDeadline = this.getDeadline();
+
         const styles = {
             width: this.getSize() || 500,
             height: 300,
@@ -35,10 +71,12 @@ class Graph extends Component {
             yScale: yScale(styles, this.props.student, this.props.task.mentor)};
 
         return (
-            <g className="cool">
+            <g className="graph">
                 <XYAxis {...styles} {...scales} ticksCount={xValues.length} />
-                <StatsLine {...scales} commentsAndCommit={this.props.task.commentsAndCommits} />
-                <Deadlines {...scales} startDeadline={this.props.task.startDate} />
+                <StatsLine {...scales} startDeadline={this.props.task.startDate}
+                                       commentsAndCommit={this.props.task.commentsAndCommits} />
+                <Deadlines {...scales} startDeadline={this.props.task.startDate}
+                                       finishDeadline={currentDeadline} />
             </g>
         );
     }
@@ -52,8 +90,8 @@ const xScale = (props, commentsAndCommits, startDate) => {
     xValues = d3.set(xValues.concat(commentsAndCommits.map(commentOrCommit =>
         parseDate(commentOrCommit.createdAt))))
         .values();
+    xValues.push(currentDeadline);
 
-    console.log(xValues);
     return d3.time.scale()
             .domain(d3.extent(xValues, data => new Date(data)))
             .range([props.padding, props.width - props.padding * 2]);
