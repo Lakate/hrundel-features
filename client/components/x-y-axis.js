@@ -2,14 +2,15 @@ import React from 'react';
 import Axis from './axis';
 
 export default props => {
+    console.log(Math.max(props.ticksCount, 14), props.ticksCount);
     const xSettings = {
         translate: `translate(${props.padding}, ${props.height / 2})`,
         scale: props.xScale,
         orient: 'bottom',
-        ticks: 14,
+        ticks: Math.max(props.ticksCount, 14),
         ticksFormat: d3.time.format('%d.%m'),
         textRotate: -90,
-        dy: '-.25em',
+        dy: '.1em',
         dx: '-.8em',
         textAnchor: 'end'
     };

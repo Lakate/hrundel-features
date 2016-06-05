@@ -41,9 +41,10 @@ class problemModal extends Component {
                             <Modal.Title>{taskName}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <svg className="cool" width="100%" height="300px">
+                            <svg width="100%" height="300px">
                                 <Graph task={this.props.task} student={this.props.student} />
                             </svg>
+                            <div className="tooltip"></div>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button onClick={this.handleClose}>Close</Button>
