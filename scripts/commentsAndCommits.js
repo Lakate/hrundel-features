@@ -126,5 +126,6 @@ module.exports.getCommentsAndCommits = (task, student) => {
     let getIssueCommits = Promise.promisify(getCommits);
 
     return Promise.all([getIssueComments(task), getIssueCommits(task, student)])
-        .then(data => sortData(data[0].concat(data[1])));
+        .then(data => sortData(data[0].concat(data[1])))
+        .catch(err => console.err('Error on get Comments and Commits: ' + err));
 };

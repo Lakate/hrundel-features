@@ -11,8 +11,8 @@ export default class Axis extends React.Component {
     }
 
     renderAxis() {
-        var node = this.refs.axis;
-        var axis = d3.svg.axis()
+        let node = this.refs.axis;
+        let axis = d3.svg.axis()
                 .scale(this.props.scale)
                 .orient(this.props.orient)
                 .ticks(this.props.ticks)
@@ -26,7 +26,13 @@ export default class Axis extends React.Component {
             .selectAll('text')
             .style('text-anchor', this.props.textAnchor)
             .attr('dx', this.props.dx)
-            .attr('dy', this.props.dy)
+            .attr('dy', d => {
+                if (this.props.flagForYTicks && d === this.props.student) {
+                    return '1em';
+                } else {
+                    return this.props.dy;
+                }
+            })
             .attr('transform', () => `rotate(${this.props.textRotate})`);
     }
 

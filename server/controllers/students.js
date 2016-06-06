@@ -90,7 +90,6 @@ function createStudent(req, statusList) {
             let currentDeadline = getCurrentDeadline(task);
             task.deadlineDate = currentDeadline.date;
             task.deadlineUser = currentDeadline.user;
-            console.log(task, '______________________');
             newStudent.addTask(task);
         })
         .then(() => newStudent.updateResult(statusList))
@@ -145,7 +144,6 @@ function updateStudent(req, student, statusList) {
             let currentDeadline = getCurrentDeadline(task);
             task.deadlineDate = currentDeadline.date;
             task.deadlineUser = currentDeadline.user;
-            console.log(task, '______________________');
             if (isfoundStudent) {
                 return student.updateTask(task);
             } else {
@@ -182,6 +180,7 @@ function getCurrentDeadline(task) {
     } else {
         taskCountDays = TWOWEEKMS;
     }
+
     for (let user in time) {
         if (user !== task.commentsAndCommits[last].user) {
             return {
@@ -191,5 +190,11 @@ function getCurrentDeadline(task) {
             };
         }
     }
+
+    return {
+        date: new Date(Date.parse(task.commentsAndCommits[last].createdAt) +
+            (taskCountDays - time[task.commentsAndCommits[last].user])),
+        user: task.commentsAndCommits[last].user
+    };
 }
 

@@ -34,7 +34,8 @@ class Graph extends Component {
 
         return (
             <g className="graph">
-                <XYAxis {...styles} {...scales} ticksCount={xValues.length} />
+                <XYAxis {...styles} {...scales} ticksCount={xValues.length}
+                                                student={this.props.student} />
                 <StatsLine {...scales} startDeadline={this.props.task.startDate}
                                        commentsAndCommit={this.props.task.commentsAndCommits} />
                 <Deadlines {...scales} startDeadline={this.props.task.startDate}

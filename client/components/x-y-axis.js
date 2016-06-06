@@ -11,23 +11,25 @@ export default props => {
         textRotate: -90,
         dy: '.1em',
         dx: '-.8em',
-        textAnchor: 'end'
+        textAnchor: 'end',
+        flagForYTicks: false
     };
     const ySettings = {
         translate: `translate(${props.padding * 2}, 0)`,
         scale: props.yScale,
         orient: 'left',
         ticks: 2,
-        textRotate: -80,
+        textRotate: 0,
         dy: '-1em',
-        dx: '0',
-        textAnchor: 'middle'
+        dx: '1em',
+        textAnchor: 'middle',
+        flagForYTicks: true
     };
 
     return (
         <g className="xy-axis">
             <Axis {...xSettings}/>
-            <Axis {...ySettings}/>
+            <Axis {...ySettings} student={props.student} />
         </g>
     );
 };
