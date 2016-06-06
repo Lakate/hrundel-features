@@ -24,6 +24,7 @@
     max-height: 50px;
 
     border-right: 5px;
+    border-radius: 3px;
 
     font-size: 9px !important;
 }

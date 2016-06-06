@@ -17,6 +17,7 @@ export default class StatsLine extends React.Component {
             .selectAll('.dot')
             .data(this.props.commentsAndCommit)
             .enter().append('circle')
+            .attr('class', 'dot')
             .attr('r', 3)
             .attr('cx', commentOrCommit => xScale(new Date(commentOrCommit.createdAt)))
             .attr('cy', commentOrCommit => yScale(commentOrCommit.user))

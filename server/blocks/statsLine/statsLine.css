@@ -4,3 +4,10 @@
     stroke-width: 0.8;
     fill: none;
 }
+
+.dot
+{
+    stroke: #666;
+    stroke-width: 0.8;
+    fill: #666;
+}

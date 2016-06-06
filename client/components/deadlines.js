@@ -23,7 +23,7 @@ export default class Deadlines extends React.Component {
                     (selectedThis.attr('data-info')) + '</div>' +
                     '<div>' + selectedThis.attr('data-date').replace(/[A-Z]/g, ' ')
                         .replace(/\..+/g, ' ') + '</div>')
-                    .style('left', (selectedThis.attr('data-cx') - 80) + 'px')
+                    .style('left', (selectedThis.attr('data-cx') - 90) + 'px')
                     .style('top', (selectedThis.attr('data-cy') - 30) + 'px');
             })
             .on('mouseout', function () {
@@ -58,11 +58,11 @@ export default class Deadlines extends React.Component {
                 <path className="deadline" d={startDeadlinePath} data-cx={start.cx}
                       data-cy={start.cy} data-info="start deadline"
                       data-date={this.props.startDeadline}
-                      fill="red" stroke-width="3" stroke="red"/>
+                      fill="#f00" stroke-width="3" stroke="#f00"/>
                 <path className="deadline" d={finishDeadlinePath} data-cx={finish.cx}
                       data-cy={finish.cy} data-info={`${this.props.finishDeadlineUser} deadline`}
                       data-date={(new Date(this.props.finishDeadlineDate)).toISOString()}
-                      fill="green" stroke-width="3" stroke="green"/>
+                      fill="#008000" stroke-width="3" stroke="#008000"/>
             </g>
         );
     }
