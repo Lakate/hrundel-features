@@ -28,6 +28,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'babel',
+                query: {compact: false},
                 excude: /node_modules/
             }
         ]

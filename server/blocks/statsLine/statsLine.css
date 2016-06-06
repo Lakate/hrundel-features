@@ -1,0 +1,13 @@
+.stats-line
+{
+    stroke: #e0553d;
+    stroke-width: 0.8;
+    fill: none;
+}
+
+.dot
+{
+    stroke: #666;
+    stroke-width: 0.8;
+    fill: #666;
+}

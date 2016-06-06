@@ -22,9 +22,9 @@ let github = new GitHubApi({
 
 gitHubAuth.auth(github);
 
-function removeStudentComments(student, comments) {
+function removeStudentComments(mentor, comments) {
     return comments.filter(comment => {
-        return comment.user.toLowerCase() !== student.toLowerCase();
+        return comment.user.toLowerCase() === mentor.toLowerCase();
     });
 }
 
@@ -37,9 +37,9 @@ function parseComment(comment) {
     };
 }
 
-function parseCommits(data) {
+function parseCommits(data, student) {
     return {
-        user: data.commit.author.name,
+        user: student,
         body: data.commit.message,
         createdAt: data.commit.author.date,
         createdAtMS: Date.parse(data.commit.author.date)
@@ -83,7 +83,10 @@ function getIssueCommitsFromGH(repo, number, callback) {
 }
 
 /* eslint max-params: [2, 4] */
-function getComments(repo, pr, student, cb) {
+function getComments(task, cb) {
+    let repo = task.taskType + '-tasks-' + task.number;
+    let pr = task.pr;
+
     let getIssueComments = Promise.promisify(getIssueCommentsFromGH);
     let getPRComments = Promise.promisify(getPRCommentsFromGH);
 
@@ -94,7 +97,7 @@ function getComments(repo, pr, student, cb) {
             return comments.map(comment => parseComment(comment));
         })
         .then(comments => {
-            comments = removeStudentComments(student, comments);
+            comments = removeStudentComments(task.mentor, comments);
             return comments;
         })
         .then(data => cb(null, data));
@@ -108,17 +111,21 @@ function sortData(story) {
     return story.sort(sortByCreatedAt);
 }
 
-function getCommits(repo, pr, cb) {
+function getCommits(task, student, cb) {
+    let repo = task.taskType + '-tasks-' + task.number;
+    let pr = task.pr;
+
     let getIssueCommits = Promise.promisify(getIssueCommitsFromGH);
     getIssueCommits(repo, pr)
-        .then(commits => commits.map(commit => parseCommits(commit)))
+        .then(commits => commits.map(commit => parseCommits(commit, student)))
         .then(data => cb(null, data));
 }
 
-module.exports.getCommentsAndCommits = (repo, pr, student) => {
+module.exports.getCommentsAndCommits = (task, student) => {
     let getIssueComments = Promise.promisify(getComments);
     let getIssueCommits = Promise.promisify(getCommits);
 
-    return Promise.all([getIssueComments(repo, pr, student), getIssueCommits(repo, pr)])
-        .then(data => sortData(data[0].concat(data[1])));
+    return Promise.all([getIssueComments(task), getIssueCommits(task, student)])
+        .then(data => sortData(data[0].concat(data[1])))
+        .catch(err => console.err('Error on get Comments and Commits: ' + err));
 };

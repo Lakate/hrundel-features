@@ -9,7 +9,10 @@ const Tasks = new Schema({
     mentor: String,
     status: String,
     pr: Number,
-    commentsAndCommits: []
+    commentsAndCommits: [],
+    startDate: String,
+    deadlineDate: String,
+    deadlineUser: String
 });
 
 const studentsSchema = new Schema({
@@ -46,6 +49,8 @@ studentsSchema.methods.updateTask = function (newTask) {
             this.tasks[i].status = newTask.status;
             this.tasks[i].mentor = newTask.mentor;
             this.tasks[i].commentsAndCommits = newTask.commentsAndCommits;
+            this.tasks[i].deadlineDate = newTask.deadlineDate;
+            this.tasks[i].deadlineUser = newTask.deadlineUser;
         }
     }
 

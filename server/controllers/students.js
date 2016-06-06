@@ -7,15 +7,20 @@ const commentsAndCommits = require('../../scripts/commentsAndCommits');
 const mongoose = require('mongoose');
 
 let statusList = [];
+let repos = [];
+
+const TWOWEEKMS = 14 * 24 * 60 * 60 * 1000;
+const THREEWEEKMS = 21 * 24 * 60 * 60 * 1000;
 
 exports.refresh = (req, res) => {
     if (statusList.length === 0) {
         updateStatus.getStatusses()
-            .then(updateStatusses => {
-                statusList = updateStatusses;
+            .then(data => {
+                repos = data[0];
+                statusList = data[1];
                 // очистить через 10 минут
                 setTimeout(() => {
-                    statusList.length = 0;
+                    statusList = [];
                 }, 600000);
             })
             .then(() => {
@@ -53,6 +58,15 @@ exports.getCommentsAndCommits = (req, res) => {
         .then(student => res.json(student));
 };
 
+function getStartDate(taskName) {
+    let length = repos.length;
+    for (let i = 0; i < length; i++) {
+        if (taskName === repos[i].name) {
+            return repos[i].createAt;
+        }
+    }
+}
+
 function createStudent(req, statusList) {
     const student = {
         login: req.body.login,
@@ -65,14 +79,17 @@ function createStudent(req, statusList) {
         mentor: req.body.mentor,
         status: req.body.status,
         pr: req.body.pr,
-        commentsAndCommits: []
+        commentsAndCommits: [],
+        startDate: getStartDate(req.body.type + '-tasks-' + req.body.number)
     };
 
     const newStudent = new Students(student);
-    return commentsAndCommits.getCommentsAndCommits(task.taskType + '-tasks-' + task.number,
-        task.pr, student.login)
+    return commentsAndCommits.getCommentsAndCommits(task, student.login)
         .then(commentsAndCommits => {
             task.commentsAndCommits = commentsAndCommits;
+            let currentDeadline = getCurrentDeadline(task);
+            task.deadlineDate = currentDeadline.date;
+            task.deadlineUser = currentDeadline.user;
             newStudent.addTask(task);
         })
         .then(() => newStudent.updateResult(statusList))
@@ -102,7 +119,8 @@ function updateStudent(req, student, statusList) {
         taskType: req.body.type,
         mentor: req.body.mentor,
         status: req.body.status,
-        pr: req.body.pr
+        pr: req.body.pr,
+        startDate: getStartDate(req.body.type + '-tasks-' + req.body.number)
     };
     const query = {
         'tasks.taskType': req.body.type,
@@ -119,11 +137,13 @@ function updateStudent(req, student, statusList) {
             }
         })
         .then(() => {
-            return commentsAndCommits.getCommentsAndCommits(task.taskType + '-tasks-' + task.number,
-                task.pr, student.login);
+            return commentsAndCommits.getCommentsAndCommits(task, student.login);
         })
         .then(commentsAndCommits => {
             task.commentsAndCommits = commentsAndCommits;
+            let currentDeadline = getCurrentDeadline(task);
+            task.deadlineDate = currentDeadline.date;
+            task.deadlineUser = currentDeadline.user;
             if (isfoundStudent) {
                 return student.updateTask(task);
             } else {
@@ -138,3 +158,43 @@ function updateStudent(req, student, statusList) {
             }
         });
 }
+
+function getCurrentDeadline(task) {
+    let currentDate = Date.parse(task.startDate);
+
+    let time = {};
+    let last = task.commentsAndCommits.length - 1;
+
+    task.commentsAndCommits.forEach(commentOrCommit => {
+        if (time[commentOrCommit.user]) {
+            time[commentOrCommit.user] += Date.parse(commentOrCommit.createdAt) - currentDate;
+        } else {
+            time[commentOrCommit.user] = Date.parse(commentOrCommit.createdAt) - currentDate;
+        }
+        currentDate = Date.parse(commentOrCommit.createdAt);
+    });
+
+    let taskCountDays;
+    if (task.number === 5 || task.number === 7) {
+        taskCountDays = THREEWEEKMS;
+    } else {
+        taskCountDays = TWOWEEKMS;
+    }
+
+    for (let user in time) {
+        if (user !== task.commentsAndCommits[last].user) {
+            return {
+                date: new Date(Date.parse(task.commentsAndCommits[last].createdAt) +
+                (taskCountDays - time[user])),
+                user
+            };
+        }
+    }
+
+    return {
+        date: new Date(Date.parse(task.commentsAndCommits[last].createdAt) +
+            (taskCountDays - time[task.commentsAndCommits[last].user])),
+        user: task.commentsAndCommits[last].user
+    };
+}
+

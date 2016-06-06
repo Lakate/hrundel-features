@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Modal, Glyphicon} from 'react-bootstrap';
 import {getCommitsAndComments} from '../actions';
+import Graph from './graph';
 
 class problemModal extends Component {
     constructor(props) {
@@ -15,14 +16,14 @@ class problemModal extends Component {
     }
 
     handleOpen() {
-        this.props.dispatch(getCommitsAndComments(this.props.task, this.props.student));
+        // this.props.dispatch(getCommitsAndComments(this.props.task, this.props.student));
         this.setState({showModal: true});
     }
 
     render() {
         if (this.props.disabled) {
             return (
-                <Button className="btn-default"
+                <Button className="btn-default problem-modal"
                         bsSize="xsmall" disabled>
                     <Glyphicon glyph="stats" />
                 </Button>
@@ -30,7 +31,7 @@ class problemModal extends Component {
         } else {
             const taskName = `${this.props.task.taskType}-tasks-${this.props.task.number}`;
             return (
-                <div>
+                <div className="problem-modal">
                     <Button className="btn-default"
                             bsSize="xsmall" onClick={this.handleOpen}>
                         <Glyphicon glyph="stats" />
@@ -40,6 +41,10 @@ class problemModal extends Component {
                             <Modal.Title>{taskName}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
+                            <svg width="100%" height="300px">
+                                <Graph task={this.props.task} student={this.props.student} />
+                            </svg>
+                            <div className="tooltip"></div>
                         </Modal.Body>
                         <Modal.Footer>
                             <Button onClick={this.handleClose}>Close</Button>
