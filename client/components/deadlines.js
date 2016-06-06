@@ -23,7 +23,7 @@ export default class Deadlines extends React.Component {
                     (selectedThis.attr('data-info')) + '</div>' +
                     '<div>' + selectedThis.attr('data-date').replace(/[A-Z]/g, ' ')
                         .replace(/\..+/g, ' ') + '</div>')
-                    .style('left', (selectedThis.attr('data-cx') - 90) + 'px')
+                    .style('left', (selectedThis.attr('data-cx') - 80) + 'px')
                     .style('top', (selectedThis.attr('data-cy') - 30) + 'px');
             })
             .on('mouseout', function () {
@@ -46,7 +46,7 @@ export default class Deadlines extends React.Component {
     render() {
         let startDeadline = this.getStartDeadline(this.props.startDeadline);
         let start = this.getCoords(startDeadline);
-        let finish = this.getCoords(this.props.finishDeadline);
+        let finish = this.getCoords(this.props.finishDeadlineDate);
 
         let startDeadlinePath = `M ${start.cx},${start.cy} L${start.cx},${start.cy - 20} 
                 L${start.cx + 7},${start.cy - 15} L${start.cx},${start.cy - 10}`;
@@ -60,8 +60,8 @@ export default class Deadlines extends React.Component {
                       data-date={this.props.startDeadline}
                       fill="red" stroke-width="3" stroke="red"/>
                 <path className="deadline" d={finishDeadlinePath} data-cx={finish.cx}
-                      data-cy={finish.cy} data-info="finish deadline"
-                      data-date={(new Date(this.props.finishDeadline)).toISOString()}
+                      data-cy={finish.cy} data-info={`${this.props.finishDeadlineUser} deadline`}
+                      data-date={(new Date(this.props.finishDeadlineDate)).toISOString()}
                       fill="green" stroke-width="3" stroke="green"/>
             </g>
         );

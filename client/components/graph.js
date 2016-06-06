@@ -5,16 +5,11 @@ import StatsLine from './statsLine';
 import Deadlines from './deadlines';
 
 let xValues;
-let currentDeadline;
-
-const TWOWEEKMS = 14 * 24 * 60 * 60 * 1000;
-const THREEWEEKMS = 21 * 24 * 60 * 60 * 1000;
 
 class Graph extends Component {
     constructor(props) {
         super(props);
         this.getSize = this.getSize.bind(this);
-        this.getDeadline = this.getDeadline.bind(this);
     }
 
     getSize() {
@@ -27,47 +22,14 @@ class Graph extends Component {
         }
     }
 
-    getDeadline() {
-        let currentDate = Date.parse(this.props.task.startDate);
-
-        let time = {};
-        let last = this.props.task.commentsAndCommits.length - 1;
-
-        this.props.task.commentsAndCommits.forEach(commentOrCommit => {
-            if (time[commentOrCommit.user]) {
-                time[commentOrCommit.user] += Date.parse(commentOrCommit.createdAt) - currentDate;
-            } else {
-                time[commentOrCommit.user] = Date.parse(commentOrCommit.createdAt) - currentDate;
-            }
-            currentDate = Date.parse(commentOrCommit.createdAt);
-        });
-
-        let taskCountDays;
-        if (this.props.task.number === 5 || this.props.task.number === 7) {
-            taskCountDays = THREEWEEKMS;
-        } else {
-            taskCountDays = TWOWEEKMS;
-        }
-        for (let user in time) {
-            if (user !== this.props.task.commentsAndCommits[last].user) {
-                return new Date(Date.parse(this.props.task.commentsAndCommits[last].createdAt) +
-                    (taskCountDays - time[user]));
-            }
-        }
-    }
-
     render() {
-        currentDeadline = this.getDeadline();
-
         const styles = {
             width: this.getSize() || 500,
             height: 300,
             padding: 20
         };
 
-        const scales = {xScale: xScale(styles,
-            this.props.task.commentsAndCommits,
-            this.props.task.startDate),
+        const scales = {xScale: xScale(styles, this.props.task),
             yScale: yScale(styles, this.props.student, this.props.task.mentor)};
 
         return (
@@ -76,7 +38,8 @@ class Graph extends Component {
                 <StatsLine {...scales} startDeadline={this.props.task.startDate}
                                        commentsAndCommit={this.props.task.commentsAndCommits} />
                 <Deadlines {...scales} startDeadline={this.props.task.startDate}
-                                       finishDeadline={currentDeadline} />
+                                       finishDeadlineDate={this.props.task.deadlineDate}
+                                       finishDeadlineUser={this.props.task.deadlineUser} />
             </g>
         );
     }
@@ -85,12 +48,12 @@ class Graph extends Component {
 export default Graph;
 
 // Returns a function that "scales" X coordinates from the data to fit the chart
-const xScale = (props, commentsAndCommits, startDate) => {
-    xValues = [parseDate(startDate)];
-    xValues = d3.set(xValues.concat(commentsAndCommits.map(commentOrCommit =>
+const xScale = (props, task) => {
+    xValues = [parseDate(task.startDate)];
+    xValues = d3.set(xValues.concat(task.commentsAndCommits.map(commentOrCommit =>
         parseDate(commentOrCommit.createdAt))))
         .values();
-    xValues.push(currentDeadline);
+    xValues.push(task.deadlineDate);
 
     return d3.time.scale()
             .domain(d3.extent(xValues, data => new Date(data)))

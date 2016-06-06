@@ -43,7 +43,7 @@ export default class StatsLine extends React.Component {
         let valueline = d3.svg.line()
             .x(commentOrCommit => xScale(new Date(commentOrCommit.createdAt)))
             .y(commentOrCommit => yScale(commentOrCommit.user))
-            .interpolate('step');
+            .interpolate('step-before');
 
         return valueline(this.props.commentsAndCommit);
     }

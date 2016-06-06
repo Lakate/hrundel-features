@@ -9,6 +9,9 @@ const mongoose = require('mongoose');
 let statusList = [];
 let repos = [];
 
+const TWOWEEKMS = 14 * 24 * 60 * 60 * 1000;
+const THREEWEEKMS = 21 * 24 * 60 * 60 * 1000;
+
 exports.refresh = (req, res) => {
     if (statusList.length === 0) {
         updateStatus.getStatusses()
@@ -84,6 +87,10 @@ function createStudent(req, statusList) {
     return commentsAndCommits.getCommentsAndCommits(task, student.login)
         .then(commentsAndCommits => {
             task.commentsAndCommits = commentsAndCommits;
+            let currentDeadline = getCurrentDeadline(task);
+            task.deadlineDate = currentDeadline.date;
+            task.deadlineUser = currentDeadline.user;
+            console.log(task, '______________________');
             newStudent.addTask(task);
         })
         .then(() => newStudent.updateResult(statusList))
@@ -135,6 +142,10 @@ function updateStudent(req, student, statusList) {
         })
         .then(commentsAndCommits => {
             task.commentsAndCommits = commentsAndCommits;
+            let currentDeadline = getCurrentDeadline(task);
+            task.deadlineDate = currentDeadline.date;
+            task.deadlineUser = currentDeadline.user;
+            console.log(task, '______________________');
             if (isfoundStudent) {
                 return student.updateTask(task);
             } else {
@@ -149,3 +160,36 @@ function updateStudent(req, student, statusList) {
             }
         });
 }
+
+function getCurrentDeadline(task) {
+    let currentDate = Date.parse(task.startDate);
+
+    let time = {};
+    let last = task.commentsAndCommits.length - 1;
+
+    task.commentsAndCommits.forEach(commentOrCommit => {
+        if (time[commentOrCommit.user]) {
+            time[commentOrCommit.user] += Date.parse(commentOrCommit.createdAt) - currentDate;
+        } else {
+            time[commentOrCommit.user] = Date.parse(commentOrCommit.createdAt) - currentDate;
+        }
+        currentDate = Date.parse(commentOrCommit.createdAt);
+    });
+
+    let taskCountDays;
+    if (task.number === 5 || task.number === 7) {
+        taskCountDays = THREEWEEKMS;
+    } else {
+        taskCountDays = TWOWEEKMS;
+    }
+    for (let user in time) {
+        if (user !== task.commentsAndCommits[last].user) {
+            return {
+                date: new Date(Date.parse(task.commentsAndCommits[last].createdAt) +
+                (taskCountDays - time[user])),
+                user
+            };
+        }
+    }
+}
+
