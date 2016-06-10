@@ -1,14 +1,9 @@
 'use strict';
 
 module.exports.auth = github => {
+    const token = process.env.TOKEN;
     github.authenticate({
-        type: 'basic',
-        username: 'lakate',
-        password: '87051021004Aa'
+        type: 'token',
+        token
     });
-    // const token = process.env.TOKEN;
-    // github.authenticate({
-    //     type: 'token',
-    //     token
-    // });
 };
