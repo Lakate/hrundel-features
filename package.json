@@ -16,6 +16,7 @@
     "extract-text-webpack-plugin": "1.0.1",
     "github": "0.2.4",
     "hbs": "4.0.0",
+    "lru-cache": "4.0.1",
     "minimist": "1.2.0",
     "mongoose": "4.4.12",
     "morgan": "1.7.0",

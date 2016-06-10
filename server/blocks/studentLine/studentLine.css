@@ -35,3 +35,11 @@
 {
     opacity: 1;
 }
+
+@media (max-width: 480px)
+{
+    .student-line td:nth-child(2)
+    {
+        display: none;
+    }
+}

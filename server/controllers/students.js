@@ -6,45 +6,26 @@ const updateStatus = require('../../scripts/updateStatus');
 const commentsAndCommits = require('../../scripts/commentsAndCommits');
 const mongoose = require('mongoose');
 
-let statusList = [];
-let repos = [];
+const cache = require('../../scripts/lruCache');
 
 const TWOWEEKMS = 14 * 24 * 60 * 60 * 1000;
 const THREEWEEKMS = 21 * 24 * 60 * 60 * 1000;
 
 exports.refresh = (req, res) => {
-    if (statusList.length === 0) {
-        updateStatus.getStatusses()
-            .then(data => {
-                repos = data[0];
-                statusList = data[1];
-                // очистить через 10 минут
-                setTimeout(() => {
-                    statusList = [];
-                }, 600000);
-            })
-            .then(() => {
-                return Students.findStudent({login: req.body.login})
-                    .then(student => {
-                        if (student) {
-                            return updateStudent(req, student, statusList);
-                        } else {
-                            return createStudent(req, statusList);
-                        }
-                    });
-            })
-            .then(() => res.send('OK'));
-    } else {
-        Students.findStudent({login: req.body.login})
-            .then(student => {
-                if (student) {
-                    return updateStudent(req, student, statusList);
-                } else {
-                    return createStudent(req, statusList);
-                }
-            })
-            .then(() => res.send('OK'));
-    }
+    return cache.memoize('statusList', 60 * 60 * 1000, () => {
+        return updateStatus.getStatusses();
+    })
+        .then(statusList => {
+            Students.findStudent({login: req.body.login})
+                .then(student => {
+                    if (student) {
+                        return updateStudent(req, student, statusList);
+                    } else {
+                        return createStudent(req, statusList);
+                    }
+                })
+                .then(() => res.send('OK'));
+        });
 };
 
 exports.getStudent = (req, res) => {
@@ -59,7 +40,8 @@ exports.getCommentsAndCommits = (req, res) => {
 };
 
 function getStartDate(taskName) {
-    let length = repos.length;
+    const repos = cache.reposList;
+    const length = repos.length;
     for (let i = 0; i < length; i++) {
         if (taskName === repos[i].name) {
             return repos[i].createAt;

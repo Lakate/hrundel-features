@@ -9,6 +9,8 @@ const Promise = require('bluebird');
 
 const gitHubAuth = require('./gitHubAuth');
 
+const cache = require('./lruCache');
+
 let github = new GitHubApi({
     version: '3.0.0',
     debug: true,
@@ -137,12 +139,9 @@ module.exports.getStatusses = () => {
     let getReposFromGH = Promise.promisify(getRepos);
     let getStatussesFromGH = Promise.promisify(getStatusFromRepo);
 
-    let repos = [];
-
-    return getReposFromGH()
-            .then(reposList => {
-                repos = reposList;
-                return getStatussesFromGH(reposList);
-            })
-            .then(updateStatusses => [repos, updateStatusses]);
+    return cache.memoize('reposList', 2 * 24 * 60 * 60 * 1000, () => {
+        return getReposFromGH();
+    })
+        .then(reposList => getStatussesFromGH(reposList))
+        .then(updateStatusses => updateStatusses);
 };
