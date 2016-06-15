@@ -8,8 +8,9 @@ const mongoose = require('mongoose');
 
 const cache = require('../../scripts/lruCache');
 
-const TWOWEEKMS = 14 * 24 * 60 * 60 * 1000;
-const THREEWEEKMS = 21 * 24 * 60 * 60 * 1000;
+const config = require('config');
+const STANDARD_DEADLINE = config.get('standardDeadline');
+const EXCEPTIONAL_TASKS = config.get('exceptionalTasks');
 
 exports.refresh = (req, res) => {
     return cache.memoize('statusList', 60 * 60 * 1000, () => {
@@ -49,6 +50,22 @@ function getStartDate(taskName) {
     }
 }
 
+function setDeadline(task, student, isFoundStudent) {
+    let currentDeadline = getCurrentDeadline(task);
+    task.deadlineDate = currentDeadline.date;
+    if (Date.parse(task.deadlineDate) - Date.now() <= 86400000 &&
+        Date.parse(task.deadlineDate) - Date.now() > 82800000) {
+        slack.sendMessage(student.login, `${task.taskType}-tasks-${task.number}`);
+    }
+    task.deadlineUser = currentDeadline.user;
+
+    if (isFoundStudent) {
+        return student.updateTask(task);
+    } else {
+        return student.addTask(task);
+    }
+}
+
 function createStudent(req, statusList) {
     const student = {
         login: req.body.login,
@@ -69,20 +86,10 @@ function createStudent(req, statusList) {
     return commentsAndCommits.getCommentsAndCommits(task, student.login)
         .then(commentsAndCommits => {
             task.commentsAndCommits = commentsAndCommits;
-            let currentDeadline = getCurrentDeadline(task);
-            task.deadlineDate = currentDeadline.date;
-            if (Date.parse(task.deadlineDate) - Date.now() <= 86400000 &&
-                Date.parse(task.deadlineDate) - Date.now() > 82800000) {
-                slack.sendMessage(student.login, `${task.taskType}-tasks-${task.number}`);
-            }
-            task.deadlineUser = currentDeadline.user;
-            newStudent.addTask(task);
-        })
-        .then(() => newStudent.updateResult(statusList))
-        .then(commentsAndCommits => {
-            newStudent.commentsAndCommits = commentsAndCommits;
             newStudent.save();
         })
+        .then(() => newStudent.updateResult(statusList))
+        .then(() => setDeadline(task, newStudent))
         .then(() => {
             github.getUserData(newStudent)
                 .then(data => {
@@ -120,30 +127,19 @@ function updateStudent(req, student, statusList) {
         'login': req.body.login
     };
 
-    let isfoundStudent = false;
+    let isFoundStudent = false;
     return Students.findStudent(query)
         .then(foundStudent => {
             if (foundStudent) {
                 student = foundStudent;
-                isfoundStudent = true;
+                isFoundStudent = true;
             }
         })
         .then(() => commentsAndCommits
             .getCommentsAndCommits(task, student.login))
         .then(commentsAndCommits => {
             task.commentsAndCommits = commentsAndCommits;
-            let currentDeadline = getCurrentDeadline(task);
-            task.deadlineDate = currentDeadline.date;
-            if (Date.parse(task.deadlineDate) - Date.now() <= 86400000 &&
-                Date.parse(task.deadlineDate) - Date.now() > 82800000) {
-                slack.sendMessage(student.login, `${task.taskType}-tasks-${task.number}`);
-            }
-            task.deadlineUser = currentDeadline.user;
-            if (isfoundStudent) {
-                return student.updateTask(task);
-            } else {
-                return student.addTask(task);
-            }
+            return setDeadline(task, student, isFoundStudent);
         })
         .then(savedStudent => {
             if (statusList) {
@@ -170,10 +166,11 @@ function getCurrentDeadline(task) {
     });
 
     let taskCountDays;
-    if (task.number === 5 || task.number === 7) {
-        taskCountDays = THREEWEEKMS;
+    let taskName = `${task.taskType}-tasks-${task.number}`;
+    if (taskName in EXCEPTIONAL_TASKS) {
+        taskCountDays = EXCEPTIONAL_TASKS[taskName].deadline;
     } else {
-        taskCountDays = TWOWEEKMS;
+        taskCountDays = STANDARD_DEADLINE;
     }
 
     for (let user in time) {
