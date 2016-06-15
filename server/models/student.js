@@ -3,6 +3,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const config = require('config');
+const EXCEPTIONAL_TASKS = config.get('exceptionalTasks');
+const STANDARD_POINTS = config.get('standardPoints');
+const STANDARD_HALF_POINTS = config.get('standardHalfPoints');
+
 const Tasks = new Schema({
     taskType: String,
     number: Number,
@@ -64,22 +69,24 @@ studentsSchema.methods.updateResult = function (statusList) {
     let currentResult = 0;
 
     for (let i in this.tasks) {
-        let newStatus = getNewStatus(this.tasks[i], this.login, statusList);
+        let newStatus = getNewStatus(this.login, statusList[this.tasks[i].number - 1]);
+        let taskName = `${this.tasks[i].taskType}-tasks-${this.tasks[i].number}`;
+
         this.tasks[i].status = newStatus || this.tasks[i].status;
         if (this.tasks[i].status === null) {
             this.tasks[i].status = 'pending';
         }
         if (this.tasks[i].status === 'accepted') {
-            if (this.tasks[i].number === 5 || this.tasks[i].number === 7) {
-                currentResult += 2;
+            if (taskName in EXCEPTIONAL_TASKS) {
+                currentResult += EXCEPTIONAL_TASKS[taskName].points;
             } else {
-                currentResult += 1;
+                currentResult += STANDARD_POINTS;
             }
         } else if (this.tasks[i].status === 'half-accepted') {
-            if (this.tasks[i].number === 5 || this.tasks[i].number === 7) {
-                currentResult += 1;
+            if (taskName in EXCEPTIONAL_TASKS) {
+                currentResult += EXCEPTIONAL_TASKS[taskName].halfPoints;
             } else {
-                currentResult += 0.5;
+                currentResult += STANDARD_HALF_POINTS;
             }
         }
     }
@@ -91,21 +98,19 @@ studentsSchema.methods.updateResult = function (statusList) {
 
 module.exports = mongoose.model('Students', studentsSchema);
 
-function getNewStatus(task, login, fullStatusList) {
-    let taskStatusList = fullStatusList[task.number - 1];
-    let statussesCount = taskStatusList.length;
-
+function getNewStatus(login, statusList) {
     let currentStatus;
     let failed = false;
     let mentorRuntime = false;
     let studentRuntime = false;
 
+    let statussesCount = statusList.length;
     for (let i = 0; i < statussesCount; i++) {
-        if (taskStatusList[i].login.toLowerCase() === login.toLowerCase()) {
-            if (taskStatusList[i].state !== 'closed') {
+        if (statusList[i].login.toLowerCase() === login.toLowerCase()) {
+            if (statusList[i].state !== 'closed') {
                 return 'pending';
             }
-            taskStatusList[i].labels.forEach(label => {
+            statusList[i].labels.forEach(label => {
                 if (label.name === 'failed') {
                     failed = true;
                 }

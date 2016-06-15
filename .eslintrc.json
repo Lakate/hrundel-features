@@ -27,6 +27,7 @@
     "no-else-return": 0,
     "camelcase": 0,
     "no-loop-func": 0,
+    "array-callback-return": 0,
     "no-undef": 0,
     "no-inner-declarations": 0,
     "no-case-declarations": 0,

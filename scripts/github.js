@@ -1,6 +1,9 @@
 'use strict';
 
-const ORGANIZATION = 'urfu-2015';
+const config = require('config');
+const ORGANIZATION = config.get('organization');
+const REPOS_LIST = config.get('repos');
+
 const GitHubApi = require('github');
 const PAGE_LIST = 2;
 
@@ -8,7 +11,6 @@ const async = require('async');
 const Promise = require('bluebird');
 
 const gitHubAuth = require('./gitHubAuth');
-
 const cache = require('./lruCache');
 
 let github = new GitHubApi({
@@ -27,7 +29,12 @@ gitHubAuth.auth(github);
 
 function parseReposList(list) {
     let reposList = list.filter(repo => {
-        return repo.name.includes('webdev-tasks');
+        let length = REPOS_LIST.length;
+        for (let i = 0; i < length; i++) {
+            if (repo.name.includes(REPOS_LIST[i])) {
+                return true;
+            }
+        }
     });
     reposList = reposList.map(repo => {
         return {name: repo.name, createAt: repo.created_at};
@@ -116,6 +123,7 @@ function getInitialDataFromIssues(repo, callback) {
             return;
         }
         let pageCount = getEventsPagesCount(res.meta.link);
+        // будем получать все страницы со статусами параллельно
         let functions = setBindingFunction(parseInt(pageCount, 10), repo);
 
         async.parallel(functions, (err, res) => {

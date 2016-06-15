@@ -1,10 +1,11 @@
 'use strict';
 
-const ORGANIZATION = 'urfu-2015';
-const GitHubApi = require('github');
-const PAGE_LIST = 2;
+const config = require('config');
+const ORGANIZATION = config.get('organization');
 
+const GitHubApi = require('github');
 const Promise = require('bluebird');
+const async = require('async');
 
 const gitHubAuth = require('./gitHubAuth');
 
@@ -51,34 +52,64 @@ function getPagesCount(links) {
     return pagesNumber[1].match(/(\d+)/)[0];
 }
 
-function getIssueCommentsFromGH(repo, number, callback) {
-    github.issues.getComments({
-        user: ORGANIZATION,
-        repo: repo,
-        number: number,
-        page: 1,
-        per_page: 100
-    }, function (err, res) {
-        if (!res.meta.link) {
-            callback(err, res);
-            return;
-        }
+function setBindingFunction(pagesCount, data, fn) {
+    let functions = [];
 
-        let pageCount = getPagesCount(res.meta.link);
-        let functions = setBindingFunction(parseInt(pageCount, 10), repo);
-        callback(err, res);
+    for (let i = 2; i <= pagesCount; i++) {
+        functions.push(fn.bind(null, {repo: data.repo, page: i, number: data.number}));
+    }
+
+    return functions;
+}
+
+function mergeDataToOneObject(list) {
+    let newList = [];
+
+    list.forEach(status => {
+        newList = newList.concat(status);
+    });
+
+    return newList;
+}
+
+/* eslint max-params: [2, 4] */
+function parseData(err, res, data, fn) {
+    let response = res;
+
+    if (!res.meta.link || data.page !== 1) {
+        data.callback(err, res);
+        return;
+    }
+
+    let pageCount = getPagesCount(res.meta.link);
+    let functions = setBindingFunction(parseInt(pageCount, 10), data, fn);
+    async.parallel(functions, (err, res) => {
+        let responseList = mergeDataToOneObject(response.concat(res));
+        callback(err, responseList);
     });
 }
 
-function getPRCommentsFromGH(repo, number, callback) {
-    github.pullRequests.getComments({
+function getIssueCommentsFromGH(data, callback) {
+    github.issues.getComments({
         user: ORGANIZATION,
-        repo: repo,
-        number: number,
-        page: 1,
+        repo: data.repo,
+        number: data.number,
+        page: data.page,
         per_page: 100
     }, function (err, res) {
-        callback(err, res);
+        parseData(err, res, {data, callback}, getIssueCommentsFromGH);
+    });
+}
+
+function getPRCommentsFromGH(data, callback) {
+    github.pullRequests.getComments({
+        user: ORGANIZATION,
+        repo: data.repo,
+        number: data.number,
+        page: data.page,
+        per_page: 100
+    }, function (err, res) {
+        parseData(err, res, {data, callback}, getPRCommentsFromGH);
     });
 }
 
@@ -94,7 +125,6 @@ function getIssueCommitsFromGH(repo, number, callback) {
     });
 }
 
-/* eslint max-params: [2, 4] */
 function getComments(task, cb) {
     let repo = task.taskType + '-tasks-' + task.number;
     let pr = task.pr;
@@ -102,8 +132,8 @@ function getComments(task, cb) {
     let getIssueComments = Promise.promisify(getIssueCommentsFromGH);
     let getPRComments = Promise.promisify(getPRCommentsFromGH);
 
-    Promise.all([getIssueComments(repo, pr),
-        getPRComments(repo, pr)])
+    Promise.all([getIssueComments({repo, number: pr, page: 1}),
+        getPRComments({repo, number: pr, page: 1})])
         .then(data => {
             let comments = data[0].concat(data[1]);
             return comments.map(comment => parseComment(comment));
