@@ -1,9 +1,9 @@
 'use strict';
 
 const Students = require('../models/student');
-const getUserName = require('../../scripts/getGitHubName');
-const updateStatus = require('../../scripts/updateStatus');
+const github = require('../../scripts/github');
 const commentsAndCommits = require('../../scripts/commentsAndCommits');
+const slack = require('../../scripts/slackBot');
 const mongoose = require('mongoose');
 
 const cache = require('../../scripts/lruCache');
@@ -13,7 +13,7 @@ const THREEWEEKMS = 21 * 24 * 60 * 60 * 1000;
 
 exports.refresh = (req, res) => {
     return cache.memoize('statusList', 60 * 60 * 1000, () => {
-        return updateStatus.getStatusses();
+        return github.getStatusses();
     })
         .then(statusList => {
             Students.findStudent({login: req.body.login})
@@ -71,6 +71,10 @@ function createStudent(req, statusList) {
             task.commentsAndCommits = commentsAndCommits;
             let currentDeadline = getCurrentDeadline(task);
             task.deadlineDate = currentDeadline.date;
+            if (Date.parse(task.deadlineDate) - Date.now() <= 86400000 &&
+                Date.parse(task.deadlineDate) - Date.now() > 82800000) {
+                slack.sendMessage(student.login, `${task.taskType}-tasks-${task.number}`);
+            }
             task.deadlineUser = currentDeadline.user;
             newStudent.addTask(task);
         })
@@ -80,16 +84,22 @@ function createStudent(req, statusList) {
             newStudent.save();
         })
         .then(() => {
-            getUserName(newStudent, (student, name) => {
-                if (name) {
-                    student.name = name;
-                } else {
-                    student.name = student.login;
-                }
-                student.save();
+            github.getUserData(newStudent)
+                .then(data => {
+                    newStudent.name = data.name || newStudent.login;
+                    newStudent.email = data.email || '';
+                    newStudent.save();
+                });
+        })
+        .then(() => {
+            return cache.memoize('slackUserList', 24 * 60 * 60 * 1000, () => {
+                return slack.getUserList();
             });
         })
-        .then(() => newStudent.save())
+        .then(userList => {
+            newStudent.slackUsername = newStudent.email ? userList[newStudent.email] : '';
+            newStudent.save();
+        })
         .catch(err => {
             console.error('Error on user save: ' + err);
         });
@@ -118,13 +128,16 @@ function updateStudent(req, student, statusList) {
                 isfoundStudent = true;
             }
         })
-        .then(() => {
-            return commentsAndCommits.getCommentsAndCommits(task, student.login);
-        })
+        .then(() => commentsAndCommits
+            .getCommentsAndCommits(task, student.login))
         .then(commentsAndCommits => {
             task.commentsAndCommits = commentsAndCommits;
             let currentDeadline = getCurrentDeadline(task);
             task.deadlineDate = currentDeadline.date;
+            if (Date.parse(task.deadlineDate) - Date.now() <= 86400000 &&
+                Date.parse(task.deadlineDate) - Date.now() > 82800000) {
+                slack.sendMessage(student.login, `${task.taskType}-tasks-${task.number}`);
+            }
             task.deadlineUser = currentDeadline.user;
             if (isfoundStudent) {
                 return student.updateTask(task);
@@ -179,4 +192,3 @@ function getCurrentDeadline(task) {
         user: task.commentsAndCommits[last].user
     };
 }
-

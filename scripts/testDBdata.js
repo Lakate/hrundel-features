@@ -1,6 +1,5 @@
 'use strict';
 
-const getUserName = require('./getGitHubName');
 const mongoose = require('./mongooseConnect');
 const clearDB = require('./clearDB');
 
@@ -86,11 +85,6 @@ for (let i = 0; i < students.length; i++) {
         });
     }
     student.save();
-
-    getUserName(student, (student, name) => {
-        student.name = name;
-        student.save();
-    });
 }
 
 console.log('Done!');
