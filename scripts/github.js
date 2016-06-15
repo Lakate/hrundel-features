@@ -145,3 +145,16 @@ module.exports.getStatusses = () => {
         .then(reposList => getStatussesFromGH(reposList))
         .then(updateStatusses => updateStatusses);
 };
+
+module.exports.getUserData = user => {
+    let getUserDataPromise = Promise.promisify(github.user.getFrom.bind(github,
+        {user: user.login}));
+
+    return getUserDataPromise()
+        .then(data => {
+            return {name: data.name, email: data.email};
+        })
+        .catch(err => {
+            console.err(err);
+        });
+};
