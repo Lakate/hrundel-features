@@ -12,6 +12,16 @@ const config = require('config');
 const STANDARD_DEADLINE = config.get('standardDeadline');
 const EXCEPTIONAL_TASKS = config.get('exceptionalTasks');
 
+/**
+ * Функция, выполняющая обнвление бд.
+ * Сначала получаем статусы всех коммитов в организации и записываем их в кеш,
+ * после ищем студента - если нашли, то обновляем данные о нем,
+ * иначе - создаем нового и записываем в бд
+ *
+ * @param req - информация о коммите от хрюнделя
+ * @param res
+ */
+
 exports.refresh = (req, res) => {
     return cache.memoize('statusList', 60 * 60 * 1000, () => {
         return github.getStatusses();
@@ -35,11 +45,22 @@ exports.getStudent = (req, res) => {
         .then(student => res.json(student));
 };
 
+/**
+ * Функция, необходимая для рисования графиков.
+ * Возвращает данные о студенте, его задачах, коммитах
+ */
 exports.getCommentsAndCommits = (req, res) => {
     updateStudent(req)
         .then(student => res.json(student));
 };
 
+/**
+ * Функция, которая для задачи возвращает время создания репазитория,
+ * чтобы была точка отсчета дедлайнов
+ *
+ * @param taskName - название задачи
+ * @returns Date - дата создания репазитория
+ */
 function getStartDate(taskName) {
     const repos = cache.reposList;
     const length = repos.length;
@@ -50,6 +71,14 @@ function getStartDate(taskName) {
     }
 }
 
+/**
+ * Функция, для вычисления даты текущего дедлайна,
+ * и если до него остались примерно сутки - шлет оповещение в слак
+ *
+ * @param task - задача
+ * @param student - студент
+ * @param isFoundStudent - обновление студента или его создание
+ */
 function setDeadline(task, student, isFoundStudent) {
     let currentDeadline = getCurrentDeadline(task);
     task.deadlineDate = currentDeadline.date;
@@ -66,6 +95,18 @@ function setDeadline(task, student, isFoundStudent) {
     }
 }
 
+/**
+ * Функция создания студента и запись данных о нем в бд
+ * Сначала для задачи получаем данные о комментариях и коммитах,
+ * далее вычисляем его актуальные баллы,
+ * далее вычисляем дату текущего дедлайна,
+ * далее получаем с гитхаба его email и имя,
+ * далее устанавливаем его имя в слаке,
+ * и сохраняем результат
+ *
+ * @param req - данные о студенте и коммите от хрюнделя
+ * @param statusList -
+ */
 function createStudent(req, statusList) {
     const student = {
         login: req.body.login,
@@ -112,6 +153,18 @@ function createStudent(req, statusList) {
         });
 }
 
+/**
+ * Функция, обновляющая данные о студенте
+ * Сначала ищем данного студента в бд,
+ * далее получаем все комментарии и коммиты для этой задачи,
+ * далее вычисляем текущую дату дедлайна,
+ * далее вычисляем его тукущий результат
+ * и сохраняем полученные данные
+ *
+ * @param req - данные о студенте и коммите от хрюнделя
+ * @param student
+ * @param statusList - статусы всех коммитов
+ */
 function updateStudent(req, student, statusList) {
     const task = {
         number: req.body.number,
@@ -150,6 +203,16 @@ function updateStudent(req, student, statusList) {
         });
 }
 
+/**
+ * Функция, вычисляющая дату текущего дедлайна
+ * Сначала вычисляем скольо времени осталось у ментора и сколько у студента,
+ * далее устанавливаем сколько дней дано на сдачу задачи,
+ * далее устанавливаем "на чьей стороне тикают часы" и сколько
+ * осталось до дедлайна,
+ * и возвращаем результат
+ *
+ * @param task - задача
+ */
 function getCurrentDeadline(task) {
     let currentDate = Date.parse(task.startDate);
 
