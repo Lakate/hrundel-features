@@ -3,20 +3,27 @@
         "mongodb_URL": "mongodb://hrundel:hrundelurfu2015@ds045454.mlab.com:45454/board"
     },
     "organization": "urfu-2015",
-    "standardDeadline": 1209600000,
+    "standardDeadline": 1209600000, // 14 * 24 * 60 * 60 * 1000
     "standardPoints": 1,
     "standardHalfPoints": 0.5,
     "exceptionalTasks": {
         "webdev-tasks-5": {
-            "deadline": 1814400000,
+            "deadline": 1814400000, // 21 * 24 * 60 * 60 * 1000
             "points": 2,
             "halfPoints": 1
         },
         "webdev-tasks-7": {
-            "deadline": 1814400000,
+            "deadline": 1814400000, // 21 * 24 * 60 * 60 * 1000
             "points": 2,
             "halfPoints": 1
         }
     },
-    "repos": ["webdev-tasks"]
+    "repos": ["webdev-tasks"],
+    "github": {
+        "version": "3.0.0",
+        "debug": true,
+        "protocol": "https",
+        "host": "api.github.com",
+        "timeout": 5000
+    }
 }

@@ -4,28 +4,10 @@ const config = require('config');
 const ORGANIZATION = config.get('organization');
 const REPOS_LIST = config.get('repos');
 
-const GitHubApi = require('github');
-const PAGE_LIST = 2;
-
 const async = require('async');
 const Promise = require('bluebird');
-
-const gitHubAuth = require('./gitHubAuth');
 const cache = require('./lruCache');
-
-let github = new GitHubApi({
-    version: '3.0.0',
-    debug: true,
-    protocol: 'https',
-    host: 'api.github.com',
-    timeout: 5000,
-    headers: {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 ' +
-            'KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'
-    }
-});
-
-gitHubAuth.auth(github);
+const github = require('./gitHubAuth');
 
 function parseReposList(list) {
     let reposList = list.filter(repo => {
@@ -46,7 +28,8 @@ function parseReposList(list) {
 function getRepos(cb) {
     github.repos.getFromOrg({
         org: ORGANIZATION,
-        page: PAGE_LIST
+        page: 1,
+        per_page: 100
     }, function (err, res) {
         cb(err, parseReposList(res));
     });
@@ -150,8 +133,7 @@ module.exports.getStatusses = () => {
     return cache.memoize('reposList', 2 * 24 * 60 * 60 * 1000, () => {
         return getReposFromGH();
     })
-        .then(reposList => getStatussesFromGH(reposList))
-        .then(updateStatusses => updateStatusses);
+        .then(reposList => getStatussesFromGH(reposList));
 };
 
 module.exports.getUserData = user => {

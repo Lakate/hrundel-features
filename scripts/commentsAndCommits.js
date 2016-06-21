@@ -3,25 +3,10 @@
 const config = require('config');
 const ORGANIZATION = config.get('organization');
 
-const GitHubApi = require('github');
 const Promise = require('bluebird');
 const async = require('async');
 
-const gitHubAuth = require('./gitHubAuth');
-
-let github = new GitHubApi({
-    version: '3.0.0',
-    debug: true,
-    protocol: 'https',
-    host: 'api.github.com',
-    timeout: 5000,
-    headers: {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 ' +
-        'KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36'
-    }
-});
-
-gitHubAuth.auth(github);
+const github = require('./gitHubAuth');
 
 function removeStudentComments(mentor, comments) {
     return comments.filter(comment => {
