@@ -38,8 +38,7 @@ studentsSchema.statics.findAllStudents = function () {
 };
 
 studentsSchema.statics.findStudent = function (query) {
-    return this.findOne(query)
-        .then(student => student);
+    return this.findOne(query);
 };
 
 studentsSchema.methods.addTask = function (newTask) {

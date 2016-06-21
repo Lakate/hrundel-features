@@ -138,7 +138,7 @@ module.exports.getStatusses = () => {
 
 module.exports.getUserData = user => {
     let getUserDataPromise = Promise.promisify(github.user.getFrom.bind(github,
-        {user: user.login}));
+        {user}));
 
     return getUserDataPromise()
         .then(data => {
