@@ -224,9 +224,7 @@ function updateStudent(req, student, statusList) {
  */
 function getCurrentDeadline(task) {
     let currentDate = Date.parse(task.startDate);
-
     let time = {};
-    let last = task.commentsAndCommits.length - 1;
 
     task.commentsAndCommits.forEach(commentOrCommit => {
         if (time[commentOrCommit.user]) {
@@ -244,6 +242,8 @@ function getCurrentDeadline(task) {
     } else {
         taskCountDays = STANDARD_DEADLINE;
     }
+
+    let last = task.commentsAndCommits.length - 1;
 
     for (let user in time) {
         if (user !== task.commentsAndCommits[last].user) {

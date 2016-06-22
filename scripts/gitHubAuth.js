@@ -9,6 +9,7 @@ const GitHubApi = require('github');
 let github = new GitHubApi(GITHUB_SETTINGS);
 
 const token = process.env.TOKEN;
+
 github.authenticate({
     type: 'token',
     token

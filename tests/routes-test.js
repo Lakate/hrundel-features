@@ -3,9 +3,59 @@
 require('chai').should();
 const request = require('supertest');
 const app = require('../app');
+const nock = require('nock');
+
+const replies = require('./route-test-replyData');
 
 describe('Main page', function () {
     this.timeout(200000);
+
+    beforeEach(() => {
+        nock('http://api.github.com')
+            .get('/orgs/urfu-2015/repos?page=1&per_page=100')
+            .reply(200, replies.fourthTest.firstReply.body, replies.fourthTest.firstReply.headers);
+
+        nock('https://api.github.com')
+            .log(console.log)
+            .get('/repos/urfu-2015/webdev-tasks-1/issues/events?page=1&per_page=100')
+            .query(true)
+            .reply(200, replies.fourthTest.secondReply.body, replies.fourthTest.secondReply.headers);
+
+        nock('https://api.github.com')
+            .get('/repos/urfu-2015/webdev-tasks-2/issues/events?page=1&per_page=100')
+            .query(true)
+            .reply(200, replies.fourthTest.thirdReply.body, replies.fourthTest.thirdReply.headers);
+
+        nock('https://api.github.com')
+            .get('/repos/urfu-2015/webdev-tasks-3/issues/events?page=1&per_page=100')
+            .query(true)
+            .reply(200, replies.fourthTest.fourthReply.body, replies.fourthTest.fourthReply.headers);
+
+        nock('https://api.github.com')
+            .get('/repos/urfu-2015/webdev-tasks-4/issues/events?page=1&per_page=100')
+            .query(true)
+            .reply(200, replies.fourthTest.fifthReply.body, replies.fourthTest.fifthReply.headers);
+
+        nock('https://api.github.com')
+            .get('/repos/urfu-2015/webdev-tasks-5/issues/events?page=1&per_page=100')
+            .query(true)
+            .reply(200, replies.fourthTest.sixthReply.body, replies.fourthTest.sixthReply.headers);
+
+        nock('https://api.github.com')
+            .get('/repos/urfu-2015/webdev-tasks-6/issues/events?page=1&per_page=100')
+            .query(true)
+            .reply(200, replies.fourthTest.seventhReply.body, replies.fourthTest.seventhReply.headers);
+
+        nock('https://api.github.com')
+            .get('/repos/urfu-2015/webdev-tasks-7/issues/events?page=1&per_page=100')
+            .query(true)
+            .reply(200, replies.fourthTest.eightReply.body, replies.fourthTest.eightReply.headers);
+
+        nock('https://api.github.com')
+            .get('/repos/urfu-2015/webdev-tasks-1/issues/events?page=2&per_page=100')
+            .query(true)
+            .reply(200, replies.fourthTest.ninethReply.body, replies.fourthTest.ninethReply.headers);
+    });
 
     it('should respond 404', function (done) {
         request(app)
@@ -20,7 +70,7 @@ describe('Main page', function () {
             .expect(200, done);
     });
 
-    it.only('should return bad request error', done => {
+    it('should return bad request error', done => {
         request(app)
             .post('/students/refresh')
             .send({})
@@ -28,18 +78,6 @@ describe('Main page', function () {
             .end((err, res) => {
                 done(err);
             });
-    });
-
-    it('should return student', done => {
-        // nock('https://api.github.com')
-        //     .get('/repos/urfu-2015/webdev-tasks-5/pulls/22/comments?page=1&per_page=100')
-        //     .query(true)
-        //     .reply(200, {body: REPLY_COMMENT});
-
-        request(app)
-            .get('/students/5767be18f991d3700494ef2e')
-            .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(200, done);
     });
 
     it('should create new student', function (done) {
@@ -70,6 +108,22 @@ describe('Main page', function () {
             .expect(200, done);
     });
 
+    it.only('should return student', done => {
+        request(app)
+            .get('/students/5767be18f991d3700494ef2e')
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(200)
+            .end((err, res) => {
+                res.body.login.should.be.equal('Victoria-Vladimirova');
+                res.body.mentor.should.be.equal('evilj0e');
+                res.body.number.should.be.equal(1);
+                res.body.type.should.be.equal('webdev');
+                res.body.status.should.be.equal('pending');
+                res.body.pr.should.be.equal(7);
+                done(err);
+            });
+    });
+
     it('should return comments and commits for task', function (done) {
         request(app)
             .put('/students/getCommentsAndCommits')
@@ -81,44 +135,10 @@ describe('Main page', function () {
                 pr: 7,
                 login: 'Victoria-Vladimirova'
             })
-            .expect(200, done);
+            .expect(200)
+            .end((err, res) => {
+                res.body.should.be.equal(replies.commentsAndCommits);
+                done(err);
+            });
     });
 });
-
-const REPLY_COMMENT = [
-    {
-        url: 'https://api.github.com/repos/urfu-2015/webdev-tasks-5/pulls/comments/58338251',
-        id: 58338251,
-        diff_hunk: '@@ -0,0 +1,14 @@\n+<component name="libraryTable">',
-        path: '.idea/libraries/webdev_tasks_5_node_modules.xml',
-        position: null,
-        original_position: 1,
-        commit_id: '2e27443824fb27aec64776b818ae6349d7a25604',
-        original_commit_id: 'd5da4937704ea4c7721c3d010e3bca743bb3b687',
-        user: {
-            login: 'i4got10',
-            id: 1151154,
-            avatar_url: 'https://avatars.githubusercontent.com/u/1151154?v=3',
-            gravatar_id: '',
-            url: 'https://api.github.com/users/i4got10',
-            html_url: 'https://github.com/i4got10',
-            followers_url: 'https://api.github.com/users/i4got10/followers',
-            following_url: 'https://api.github.com/users/i4got10/following{/other_user}',
-            gists_url: 'https://api.github.com/users/i4got10/gists{/gist_id}',
-            starred_url: 'https://api.github.com/users/i4got10/starred{/owner}{/repo}',
-            type: 'User'
-        },
-        body: 'чето лишнее',
-        created_at: '2016-04-04T07:43:55Z',
-        updated_at: '2016-04-13T07:37:17Z',
-        html_url: 'https://github.com/urfu-2015/webdev-tasks-5/pull/22#discussion_r58338251',
-        pull_request_url: 'https://api.github.com/repos/urfu-2015/webdev-tasks-5/pulls/22',
-        _links: {
-            html: {
-                href: 'https://github.com/urfu-2015/webdev-tasks-5/pull/22#discussion_r58338251'
-            },
-            pull_request: {
-                href: 'https://api.github.com/repos/urfu-2015/webdev-tasks-5/pulls/22'
-            }
-        }
-    }];

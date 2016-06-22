@@ -27,6 +27,6 @@ module.exports.sendMessage = (user, task) => {
     slack.webhook({
         channel: `@${user}`,
         username: 'hrundel',
-        text: `Упс!\nВ задаче ${task} остались сутки до делайна!!!\nПоспеши:)`
+        text: `Ой все!\nВ задаче ${task} остались сутки до делайна:(`
     }, () => {});
 };
