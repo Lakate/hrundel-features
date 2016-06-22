@@ -13,7 +13,7 @@ const STANDARD_DEADLINE = config.get('standardDeadline');
 const EXCEPTIONAL_TASKS = config.get('exceptionalTasks');
 
 /**
- * Функция, выполняющая обнвление бд.
+ * Функция, выполняющая обновление бд.
  * Сначала получаем статусы всех коммитов в организации и записываем их в кеш,
  * после ищем студента - если нашли, то обновляем данные о нем,
  * иначе - создаем нового и записываем в бд
@@ -23,6 +23,14 @@ const EXCEPTIONAL_TASKS = config.get('exceptionalTasks');
  */
 
 exports.refresh = (req, res) => {
+    if (!req.body.login || !req.body.mentor || !req.body.number ||
+        !req.body.type || !req.body.status || !req.body.pr) {
+        res.status(400).send('Bad request');
+        return;
+    }
+
+    // assert(req.body.login, 'Login is invalid', 400);
+
     return cache.memoize('statusList', 60 * 60 * 1000, () => {
         return github.getStatusses();
     })
@@ -35,8 +43,9 @@ exports.refresh = (req, res) => {
                         return createStudent(req, statusList);
                     }
                 })
-                .then(() => res.send('OK'));
-        });
+                .then(() => res.send('OK'));// 204
+        })
+    .catch(err => res.status(500).send(err));
 };
 
 exports.getStudent = (req, res) => {
@@ -61,6 +70,7 @@ exports.getCommentsAndCommits = (req, res) => {
  * @param taskName - название задачи
  * @returns Date - дата создания репазитория
  */
+// TODO: вынести стартовую дату задачи в конфиг
 function getStartDate(taskName) {
     const repos = cache.reposList;
     const length = repos.length;
@@ -117,6 +127,7 @@ function createStudent(req, statusList) {
         number: req.body.number,
         taskType: req.body.type,
         mentor: req.body.mentor,
+        mentorEmail: '',
         status: req.body.status,
         pr: req.body.pr,
         commentsAndCommits: [],
@@ -131,13 +142,11 @@ function createStudent(req, statusList) {
         })
         .then(() => newStudent.updateResult(statusList))
         .then(() => setDeadline(task, newStudent))
-        .then(() => {
-            github.getUserData(newStudent)
-                .then(data => {
-                    newStudent.name = data.name || newStudent.login;
-                    newStudent.email = data.email || '';
-                    newStudent.save();
-                });
+        .then(() => github.getUserData(student.login))
+        .then(data => {
+            newStudent.name = data.name || newStudent.login;
+            newStudent.email = data.email || '';
+            return github.getUserData(task.mentor);
         })
         .then(() => {
             return cache.memoize('slackUserList', 24 * 60 * 60 * 1000, () => {
@@ -146,7 +155,7 @@ function createStudent(req, statusList) {
         })
         .then(userList => {
             newStudent.slackUsername = newStudent.email ? userList[newStudent.email] : '';
-            newStudent.save();
+            return newStudent.save();
         })
         .catch(err => {
             console.error('Error on user save: ' + err);
@@ -215,9 +224,7 @@ function updateStudent(req, student, statusList) {
  */
 function getCurrentDeadline(task) {
     let currentDate = Date.parse(task.startDate);
-
     let time = {};
-    let last = task.commentsAndCommits.length - 1;
 
     task.commentsAndCommits.forEach(commentOrCommit => {
         if (time[commentOrCommit.user]) {
@@ -235,6 +242,8 @@ function getCurrentDeadline(task) {
     } else {
         taskCountDays = STANDARD_DEADLINE;
     }
+
+    let last = task.commentsAndCommits.length - 1;
 
     for (let user in time) {
         if (user !== task.commentsAndCommits[last].user) {
