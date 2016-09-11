@@ -13,10 +13,10 @@ const hbs = require('hbs');
 const argv = require('minimist')(process.argv.slice(2));
 const favicon = require('serve-favicon');
 
-const viewsDir = path.join(__dirname, 'server/bundles');
+const viewsDir = path.join(__dirname, 'src/view/main');
 const publicDir = path.join(__dirname, 'public');
 
-const mongoose = require('./scripts/mongooseConnect');
+const mongoose = require('./src/helpers/mongooseConnect');
 
 app.set('views', viewsDir);
 app.set('view engine', 'hbs');
@@ -24,7 +24,7 @@ app.set('view engine', 'hbs');
 app.use(morgan('dev'));
 app.use(express.static(publicDir));
 
-hbs.registerPartials(path.join(__dirname, 'server/blocks'));
+hbs.registerPartials(path.join(__dirname, 'src/view/components'));
 
 app.use(favicon(path.join(__dirname, './favicon.ico')));
 app.use(bodyParser.json());
@@ -50,7 +50,7 @@ app.use((req, res, next) => {
 app.use(require('express-bunyan-logger')());
 app.use(require('express-bunyan-logger').errorLogger());
 
-require('./server/routes')(app);
+require('./routes')(app);
 
 app.set('port', (process.env.PORT || 5000));
 

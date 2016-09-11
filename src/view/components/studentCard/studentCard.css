@@ -1,0 +1,94 @@
+.student-card
+{
+    margin-bottom: 10px;
+    min-width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.student-card__img
+{
+    width: 250px;
+    height: 250px;
+    padding: 10px;
+}
+
+.student-card__img img
+{
+    width: 100%;
+    border-radius: 10px;
+}
+
+.student-card__data
+{
+    width: 90%;
+    text-align: center;
+}
+
+@media (min-width: 850px)
+{
+    .student-card
+    {
+        width: 20%;
+        min-width: 300px;
+        float: left;
+        margin-right: 10px;
+    }
+}
+
+.student-card-data__links
+{
+    text-decoration: none;
+}
+
+.student-card-data__links:hover
+{
+    color: #f00;
+}
+
+.student-card-data__span,
+.student-card-data__links
+{
+    margin-left: 5px;
+    color: #666;
+}
+
+.student-card-data_bold
+{
+    font-weight: 800;
+    margin: 0 !important;
+}
+
+.student-line__avatar
+{
+    width: 50px;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+.student-card-data__problems-box
+{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.student-card-data__problem
+{
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 480px)
+{
+    .student-card__img
+    {
+        width: 150px;
+        width: 150px;
+        display: block;
+        height: 150px;
+    }
+}

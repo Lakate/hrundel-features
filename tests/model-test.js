@@ -1,8 +1,8 @@
 'use strict';
 
-const mongoose = require('../scripts/mongooseConnect');
-const Student = require('../server/models/student');
-const clearDB = require('../scripts/clearDB');
+const mongoose = require('./mongooseConnect');
+const Student = require('./models/student');
+const clearDB = require('./clearDB');
 require('chai').should();
 
 describe('Student model testing', function () {
