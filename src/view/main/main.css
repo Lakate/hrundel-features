@@ -1,0 +1,23 @@
+@import "../components/header/header.css";
+@import "../components/studentLine/studentLine.css";
+@import "../components/studentCard/studentCard.css";
+@import "../components/studentTable/studentTable.css";
+@import "../components/search/search.css";
+@import "../components/problemModal/problemModal.css";
+@import "../components/problemDetails/problemDetails.css";
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+#root
+{
+    font-family: 'Roboto', sans-serif;
+    padding: 10px;
+}
+
+@media (max-width: 480px)
+{
+    #root
+    {
+        font-size: 10px;
+    }
+}
+

@@ -1,0 +1,60 @@
+.task-details__title h3
+{
+    text-align: center;
+    margin: 0;
+}
+
+.task-details__details-time
+{
+    display: flex;
+}
+
+.task-details__details div
+{
+    display: inline-block;
+    padding: 3px 10px;
+}
+
+.task-details__detail-name
+{
+    width: 45%;
+    margin-left: 10px;
+}
+
+.task-details__detail-content
+{
+    width: 50%;
+}
+
+.a
+{
+    margin-left: -10px;
+    width: 100%;
+}
+
+.b
+{
+    margin-left: 0;
+    width: 47%;
+}
+
+@media (max-width: 400px)
+{
+    .task-details
+    {
+        font-size: 10px;
+    }
+
+    .task-details__title h3
+    {
+        font-size: 15px;
+    }
+
+    .b
+    {
+        width: 48%;
+    }
+}
+
+
+

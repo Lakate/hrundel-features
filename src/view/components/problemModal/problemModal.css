@@ -1,0 +1,18 @@
+.btn-default
+{
+    background-image: none !important;
+    outline: none;
+}
+
+.problem-modal
+{
+    display: block;
+}
+
+@media (max-width: 400px)
+{
+    /*.problem-modal*/
+    /*{*/
+        /*display: none !important;*/
+    /*}*/
+}
