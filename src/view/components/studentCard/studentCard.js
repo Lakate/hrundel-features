@@ -1,17 +1,23 @@
 import React, {Component} from 'react';
-import ProblemModal from '../problemModal/problemModal';
+import ProblemBox from '../problemsBox/problemsBox';
 
 const GITHUB = 'http://github.com/';
-const GH_URFU = 'http://github.com/urfu-2015/';
+const TASKS_TYPES = ['webdev'];  // ['webdev', 'verstka', 'javascript'];
 
 class studentCard extends Component {
-    constructor(props) {
+        constructor(props) {
         super(props);
         this.getTasks = this.getTasks.bind(this);
     }
 
-    getTasks() {
-        const allTasks = this.props.selectedStudent.tasks;
+        getTasks(type) {
+        let allTasks = [];
+        if (this.props.selectedStudent.tasks) {
+            allTasks = this.props.selectedStudent.tasks.filter(task => {
+                return task.taskType === type;
+            });
+        }
+
         let tasks = [];
         for (let i in allTasks) {
             tasks[allTasks[i].number] = allTasks[i];
@@ -25,8 +31,8 @@ class studentCard extends Component {
         return tasks;
     }
 
-    render() {
-        const webdev = this.getTasks();
+        render() {
+        const tasks = TASKS_TYPES.map(type => this.getTasks(type));
 
         return (
             <div id="student-card" className="student-card">
@@ -61,39 +67,16 @@ class studentCard extends Component {
                     </p>
                     <hr />
                     <div>
-                        <p className="student-card-data_bold">Webdev:</p>
-                        <div className="student-card-data__problems-box">
-                            {
-                                webdev.map(task => {
-                                    if (task.pr) {
-                                        const href = GH_URFU +
-                                            `${task.taskType}-tasks-${task.number}/pull/${task.pr}`;
-                                        const disabled = false;
-                                        return (
-                                            <div className="student-card-data__problem">
-                                                <a className="student-card-data__links"
-                                                   href={href} target="_blank">
-                                                    {getIcon(task.status)}
-                                                </a>
-                                                <ProblemModal disabled={disabled} task={task}
-                                                    student={this.props.selectedStudent.login}
-                                                    dispatch={this.props.dispatch} />
-                                            </div>
-                                        );
-                                    } else {
-                                        const disabled = true;
-                                        return (
-                                            <div className="student-card-data__problem">
-                                                <span className="student-card-data__span">
-                                                    {getIcon(task.status)}
-                                                </span>
-                                                <ProblemModal disabled={disabled} />
-                                            </div>
-                                        );
-                                    }
-                                })
-                            }
-                        </div>
+                        {
+                            tasks.map((task, i) => {
+                                return (
+                                    <ProblemBox tasks={task} type={TASKS_TYPES[i]}
+                                                selectedStudent={this.props.selectedStudent}
+                                                dispatch={this.props.dispatch}
+                                    />
+                                );
+                            })
+                        }
                     </div>
                 </div>
             </div>
@@ -102,18 +85,3 @@ class studentCard extends Component {
 }
 
 export default studentCard;
-
-function getIcon(status) {
-    switch (status) {
-        case 'accepted':
-            return '✓';
-        case 'half-accepted':
-            return '/';
-        case 'pending':
-            return '•';
-        case 'failed':
-            return '✗';
-        default:
-            return '✗';
-    }
-}

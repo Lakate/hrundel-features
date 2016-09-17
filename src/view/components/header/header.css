@@ -1,5 +1,41 @@
 .main-header
 {
-    width: 100%;
     text-align: center;
+
+    margin: -10px -10px 10px;
+    background: #333;
+    padding: 10px;
+    color: #fff;
+}
+
+.main-header-text__icon
+{
+    height: 30px;
+    width: 30px;
+    background-image: url('./title.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.main-header-text__logo
+{
+    font-size: 5rem;
+    font-family: 'Open Sans';
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.main-header-text__description
+{
+    color: #ccc;
+}
+
+@media (max-width: 480px)
+{
+    .main-header-text__logo
+    {
+        font-size: 3rem;
+    }
 }

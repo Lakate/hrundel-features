@@ -28,16 +28,16 @@ const content = React.createClass({
                 <Header />
                 <Search foundData={foundData} dispatch={this.props.store.dispatch} />
                 <p>
-                    <span>✓</span> – полный балл,
-                    <span>/</span> – полбалла,
-                    <span>•</span> – проверяется,
-                    <span>✗</span> – 0 баллов
+                    <span>✓</span> – полный балл, <span>/</span> – полбалла,
+                    <span>•</span> – проверяется, <span>✗</span> – 0 баллов
                 </p>
-                <StudentCard selectedStudent={selectedStudent} taskCounter={taskCounter}
-                             dispatch={this.props.store.dispatch}/>
-                <StudentTable students={students} findMentor={findMentor}
-                              filteredStudents={filteredStudents}
-                              dispatch={this.props.store.dispatch}/>
+                <div className="main-information-box">
+                    <StudentCard selectedStudent={selectedStudent} taskCounter={taskCounter}
+                                 dispatch={this.props.store.dispatch}/>
+                    <StudentTable students={students} findMentor={findMentor}
+                                  filteredStudents={filteredStudents}
+                                  dispatch={this.props.store.dispatch}/>
+                </div>
             </div>
         );
     }
