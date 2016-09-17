@@ -4,13 +4,13 @@ import ProblemBox from '../problemsBox/problemsBox';
 const GITHUB = 'http://github.com/';
 const TASKS_TYPES = ['webdev'];  // ['webdev', 'verstka', 'javascript'];
 
-    class studentCard extends Component {
-    constructor(props) {
+class studentCard extends Component {
+        constructor(props) {
         super(props);
         this.getTasks = this.getTasks.bind(this);
     }
 
-    getTasks(type) {
+        getTasks(type) {
         let allTasks = [];
         if (this.props.selectedStudent.tasks) {
             allTasks = this.props.selectedStudent.tasks.filter(task => {
@@ -31,7 +31,7 @@ const TASKS_TYPES = ['webdev'];  // ['webdev', 'verstka', 'javascript'];
         return tasks;
     }
 
-    render() {
+        render() {
         const tasks = TASKS_TYPES.map(type => this.getTasks(type));
 
         return (
@@ -74,7 +74,7 @@ const TASKS_TYPES = ['webdev'];  // ['webdev', 'verstka', 'javascript'];
                                                 selectedStudent={this.props.selectedStudent}
                                                 dispatch={this.props.dispatch}
                                     />
-                                )
+                                );
                             })
                         }
                     </div>

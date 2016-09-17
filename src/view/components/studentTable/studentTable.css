@@ -14,33 +14,6 @@
     border-collapse: collapse;
 }
 
-@media (min-width: 1045px)
-{
-    .students-table
-    {
-        width: 70%;
-        float: left;
-    }
-}
-
-@media (min-width: 880px) and (max-width: 1044px)
-{
-    .students-table
-    {
-        width: 65%;
-        float: left;
-    }
-}
-
-@media (min-width: 850px) and (max-width: 879px)
-{
-    .students-table
-    {
-        width: 60%;
-        float: left;
-    }
-}
-
 @media (max-width: 480px)
 {
     .students-table th:nth-child(2)
